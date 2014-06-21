@@ -12,6 +12,7 @@ public class GameRenderer {
 	private OrthographicCamera cam;
 	private ShapeRenderer shapeRenderer;
 	
+	//Creates camera and shapes.
 	public GameRenderer(GameWorld world) {
 		myWorld = world;
 		cam = new OrthographicCamera();
@@ -21,6 +22,7 @@ public class GameRenderer {
 		shapeRenderer.setProjectionMatrix(cam.combined);
 	}
 	
+	//Currently renders a test rectangle on a black background.
 	public void render() {
 		System.out.println("Rendering Game");
 		

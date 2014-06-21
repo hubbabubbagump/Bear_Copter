@@ -8,6 +8,7 @@ public class GameWorld {
 
 		public void update(float delta) {
 			System.out.println("Updating GameWorld");
+			//Handles the scrolling of a rect from left to right and returning back left.
 			rect.x++;
 			if (rect.x > 137) {
 				rect.x = 0;

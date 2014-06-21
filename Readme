@@ -1,0 +1,9 @@
+Version 0.0.1 (June 21)
+-Created BCGame.java
+-Created GameRenderer.java
+-Created GameWorld.java
+-Created GameScreen.java
+-Programmed a rectangle to travel left -> right
+on a black background.
+-Created BearCopter.java
+-Starting to handle physics of the avatar
