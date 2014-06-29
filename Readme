@@ -1,3 +1,14 @@
+Version 0.0.2 (June 28)
+-Initialized a location for the bear to 
+start when the game begins
+-Retrieves the width and height of the device
+-Added BearCopter.java which currently
+handles the acceleration and velocity of the bear
+-implemented velocity limit of 200
+-uses a y acceleration value to simulate gravity
+-Implemented Inputhandler which handles input
+-returns true when screen is pressed
+
 Version 0.0.1 (June 21)
 -Created BCGame.java
 -Created GameRenderer.java
@@ -6,4 +17,4 @@ Version 0.0.1 (June 21)
 -Programmed a rectangle to travel left -> right
 on a black background.
 -Created BearCopter.java
--Starting to handle physics of the avatar
+-Starting to handle physics of the avatar.

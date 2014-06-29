@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.hubbabubbagump.GameWorld.GameRenderer;
 import com.hubbabubbagump.GameWorld.GameWorld;
+import com.hubbabubbagump.Helpers.InputHandler;
 
 public class GameScreen implements Screen{
 	
@@ -14,10 +15,18 @@ public class GameScreen implements Screen{
 	
 	//Creates new world and renderer
 	public GameScreen() {
-		System.out.println("GameScreen attached");
 		
-		world = new GameWorld();
+		//Calculates the midpoint of Y according to the device's height
+		float screenWidth = Gdx.graphics.getWidth();
+		float screenHeight = Gdx.graphics.getHeight();
+		float gameWidth = 136;
+		float gameHeight = screenHeight / (screenWidth / gameWidth);
+		int midPointY = (int) (gameHeight/2);
+		
+		world = new GameWorld(midPointY);
 		renderer = new GameRenderer(world);
+		
+		Gdx.input.setInputProcessor(new InputHandler(world.getBear()));
 	}
 	
 	//Handles rendering

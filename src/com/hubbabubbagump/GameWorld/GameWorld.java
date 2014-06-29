@@ -1,21 +1,21 @@
 package com.hubbabubbagump.GameWorld;
 
-import com.badlogic.gdx.math.Rectangle;
+import com.hubbabubbagump.GameObjects.BearCopter;
 
 public class GameWorld {
 	
-	private Rectangle rect = new Rectangle(0, 0, 17, 12);
-
-		public void update(float delta) {
-			System.out.println("Updating GameWorld");
-			//Handles the scrolling of a rect from left to right and returning back left.
-			rect.x++;
-			if (rect.x > 137) {
-				rect.x = 0;
-			}
-		}
-		
-		public Rectangle getRect() {
-			return rect;
-		}
+	private BearCopter bear;
+	
+	public GameWorld(int midPointY) {
+		//Initializes the bear;
+		bear = new BearCopter(33, midPointY-5, 17, 12); //sets bird location to x = 33, y = midpoint of y - 5
+	}
+	
+	public void update(float delta) {
+		bear.update(delta);
+	}
+	
+	public BearCopter getBear() {
+		return bear;
+	}
 }

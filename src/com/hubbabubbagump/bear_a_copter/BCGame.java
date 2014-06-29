@@ -10,6 +10,13 @@ public class BCGame extends Game {
 	@Override
 	public void create() {
 		System.out.println("Game Created.");
+		
 		setScreen(new GameScreen()); //Calls GameScreen
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		
 	}
 }
