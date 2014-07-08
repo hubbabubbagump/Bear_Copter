@@ -3,7 +3,6 @@ package com.hubbabubbagump.Screens;
 //Imports
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.hubbabubbagump.GameWorld.GameRenderer;
 import com.hubbabubbagump.GameWorld.GameWorld;
 import com.hubbabubbagump.Helpers.InputHandler;
@@ -12,6 +11,8 @@ public class GameScreen implements Screen{
 	
 	private GameWorld world;
 	private GameRenderer renderer;
+	private float runTime = 0;
+	private static float mid;
 	
 	//Creates new world and renderer
 	public GameScreen() {
@@ -22,9 +23,10 @@ public class GameScreen implements Screen{
 		float gameWidth = 136;
 		float gameHeight = screenHeight / (screenWidth / gameWidth);
 		int midPointY = (int) (gameHeight/2);
+		mid = midPointY;
 		
 		world = new GameWorld(midPointY);
-		renderer = new GameRenderer(world);
+		renderer = new GameRenderer(world, (int) gameHeight, midPointY);
 		
 		Gdx.input.setInputProcessor(new InputHandler(world.getBear()));
 	}
@@ -32,41 +34,46 @@ public class GameScreen implements Screen{
 	//Handles rendering
 	@Override
 	public void render (float delta) {
+		runTime += delta;
 		world.update(delta);
-		renderer.render();
+		renderer.render(runTime);
+	}
+	
+	public static float midScreen() {
+		return mid;
 	}
 	
 	//Handles resizing of the screen
 	@Override
 	public void resize(int width, int height) {
-		System.out.println("Resizing Gamescreen");
+		
 	}
 	
 	//Handles the display
 	@Override
 	public void show() {
-		System.out.println("Showing GameScreen");
+		
 	}
 	
 	
 	//Handles what happens when the screen is out of focus
 	@Override
 	public void hide() {
-		System.out.println("Hiding Gamescreen");
+		
 	}
 	
 	
 	//Handles when the game is paused
 	@Override
 	public void pause() {
-		System.out.println("Pausing Gamescreen");
+		
 	}
 	
 	
 	//Handles what happens when the game is resumed
 	@Override
 	public void resume() {
-		System.out.println("Resuming Gamescreen");
+	
 	}
 	
 	//Destructor
