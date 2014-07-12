@@ -1,5 +1,6 @@
 package com.hubbabubbagump.GameObjects;
 
+
 public class ScrollHandler {
 	
 	
@@ -13,6 +14,7 @@ public class ScrollHandler {
     // Constructor receives a float that tells us where we need to create our 
     // Grass and Wall objects.
     public ScrollHandler(float yPos) {
+    	
     	//constructs the first frontGrass and backGrass
     	frontGrass = new Grass(0, yPos, 143, 11, SCROLL_SPEED);
     	backGrass = new Grass(frontGrass.getTailX(), yPos, 143, 11, SCROLL_SPEED);
@@ -24,7 +26,23 @@ public class ScrollHandler {
     	wall3 = new Wall(wall2.getTailX() + WALL_GAP, 20, 22, 60, SCROLL_SPEED, yPos);
     }
     
-    public void update(float delta) {
+    public void updatePause(float delta) {
+
+        frontGrass.update(delta);
+        backGrass.update(delta);
+
+        // Same with grass
+        if (frontGrass.isScrolledLeft()) {
+            frontGrass.reset(backGrass.getTailX());
+
+        } else if (backGrass.isScrolledLeft()) {
+            backGrass.reset(frontGrass.getTailX());
+
+        }
+
+    }
+    
+	public void update(float delta) {
         frontGrass.update(delta);
         backGrass.update(delta);
         wall1.update(delta);
@@ -80,6 +98,14 @@ public class ScrollHandler {
     
     public boolean collides(BearCopter bear) {
     	return(wall1.collides(bear) || wall2.collides(bear) || wall3.collides(bear));
+    }
+    
+    public void restart() {
+    	frontGrass.restart(0, SCROLL_SPEED);
+    	backGrass.restart(frontGrass.getTailX(), SCROLL_SPEED);
+    	wall1.restart(210, SCROLL_SPEED);
+    	wall2.restart(wall1.getTailX() + WALL_GAP, SCROLL_SPEED);
+    	wall3.restart(wall2.getTailX() + WALL_GAP, SCROLL_SPEED);
     }
 
 }

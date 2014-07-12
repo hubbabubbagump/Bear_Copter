@@ -10,6 +10,8 @@ public class BearCopter {
 	private Vector2 position;
 	private Vector2 velocity;
 	private Vector2 acceleration;
+	private Vector2 score;
+	private Vector2 scoreRate;
 	
 	private Circle boundCircle;
 	private Boolean Alive;
@@ -18,13 +20,20 @@ public class BearCopter {
 	private int width;
 	private int height;
 	
+	private float originalY;
+	
 	public BearCopter(float x, float y, int width, int height) {
 		this.width = width;
 		this.height = height;
+		this.originalY = y;
 		position = new Vector2(x, y); //sets x and y coordinates for starting position
 		velocity = new Vector2(0, 0); //sets initial velocity to 0
 		acceleration = new Vector2(0, 430); //implements 0 x acceleration and 460 downwards acceleration
 		boundCircle = new Circle();
+		
+		score = new Vector2(0, 0);
+		scoreRate = new Vector2(1, 0);
+		
 		Alive = true;
 	}
 	
@@ -55,6 +64,7 @@ public class BearCopter {
 				rotation = 90;
 			}
 		}
+		score.add(scoreRate.cpy().scl(delta));
 	}
 	
 	public boolean isFalling() {
@@ -70,6 +80,14 @@ public class BearCopter {
 			//originally was -140
 	
 		}
+	}
+	
+	public void updatePause(float runTime) {
+        position.y = 2 * (float) Math.sin(7 * runTime) + originalY;
+    }
+	
+	public float getScore() {
+		return score.x;
 	}
 	
 	public float getX() {
@@ -102,11 +120,22 @@ public class BearCopter {
 	
 	public void dead() {
 		Alive = false;
-		
+		scoreRate.x = 0;
 		velocity.y = 0;
 	}
 	
 	public void deadAcceleration() {
 		acceleration.y = 0;
+	}
+	
+	public void restart(int yPos) {
+		rotation = 0;
+		position.y = yPos;
+		velocity.y = 0;
+		acceleration.y = 460;
+		Alive = true;
+		
+		scoreRate.x = 1;
+		score.x = 0;
 	}
 }

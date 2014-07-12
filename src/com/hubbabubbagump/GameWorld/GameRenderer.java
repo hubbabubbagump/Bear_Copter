@@ -1,5 +1,7 @@
 package com.hubbabubbagump.GameWorld;
 
+import java.util.List;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import com.badlogic.gdx.Gdx;
@@ -10,6 +12,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.hubbabubbagump.Helpers.AssetLoader;
+import com.hubbabubbagump.Helpers.InputHandler;
+import com.hubbabubbagump.UI.StartButton;
 import com.hubbabubbagump.GameObjects.BearCopter;
 import com.hubbabubbagump.GameObjects.Grass;
 import com.hubbabubbagump.GameObjects.ScrollHandler;
@@ -34,11 +38,18 @@ public class GameRenderer {
 	private Grass frontGrass, backGrass;
 	private Wall wall1, wall2, wall3;
 	
+	private TextureRegion start;
+	
 	//assets
 	private TextureRegion bg, grass;
 	//private Animation bearAnimation;
 	private TextureRegion bearMid, bearDown;
 	private TextureRegion brick;
+	
+	private List<StartButton> menuButtons;
+	StartButton button;
+	private int startX;
+	private int startY;
 	
 	//Creates camera and shapes.
 	public GameRenderer(GameWorld world, int gameHeight, int midPointY) {
@@ -46,6 +57,8 @@ public class GameRenderer {
 		
 		this.gameHeight = gameHeight;
 		this.midPointY = midPointY;
+		
+		this.menuButtons = InputHandler.getMenuButtons();
 		
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, 136, gameHeight);
@@ -59,6 +72,9 @@ public class GameRenderer {
 		
 		initGameObjects();
 		initAssets();
+		startX = StartButton.getX();
+		startY = StartButton.getY();
+		button = new StartButton(startX, startY, 40, 20, start);
 	}
 	
 	//Initializes gameObjects
@@ -80,6 +96,7 @@ public class GameRenderer {
 		bearMid = AssetLoader.bear;
 		bearDown = AssetLoader.bearDown;
 		brick = AssetLoader.brick;
+		start = AssetLoader.start;
 	}
 	
 	private void drawGrass() {
@@ -97,8 +114,58 @@ public class GameRenderer {
       
     }
 	
+	private void drawScore() {
+		int score = GameWorld.getScore();
+		String strScore = score + "";
+		AssetLoader.font.draw(batcher, "" + strScore, 130 - (11 * strScore.length()), 5);
+		
+		if (myWorld.gameOver()) {
+			int highScore = AssetLoader.getHighScore();
+			String strHighscore = "" + highScore;
+			AssetLoader.font.draw(batcher, "" + strHighscore, 130 - (11 * strHighscore.length()), midPointY + 80);
+		}
+	}
+	
+	private void drawUI() {
+		button.draw(batcher);
+	}
+	
+	private void drawBear(float runTime) {
+		//Draws bear at coordinates
+				//Retrieves the animation object form assetLoader
+				//passes in the runTime value in order to determine which frame to draw
+				if (!bear.Alive()) {
+					batcher.draw(bearDown, bear.getX(),
+		                    bear.getY(), bear.getWidth() / 2.0f,
+		                    bear.getHeight() / 2.0f, bear.getWidth(), bear.getHeight(),
+		                    1, 1, bear.getRotation());
+				}
+				else if (bear.notScared()) { 
+		            batcher.draw(bearDown, bear.getX(), bear.getY(),
+		                    bear.getWidth() / 2.0f, bear.getHeight() / 2.0f,
+		                    bear.getWidth(), bear.getHeight(), 1, 1, bear.getRotation());
+
+		        } 
+				else {
+		            batcher.draw(bearMid, bear.getX(),
+		                    bear.getY(), bear.getWidth() / 2.0f,
+		                    bear.getHeight() / 2.0f, bear.getWidth(), bear.getHeight(),
+		                    1, 1, bear.getRotation());
+		        }
+	}
+	
+	public void drawText() {
+		AssetLoader.font.draw(batcher, "Touch to", 26, midPointY - 50);
+		if (myWorld.pause()) {
+			AssetLoader.font.draw(batcher, "play", 42, midPointY - 30);
+		}
+		else if (myWorld.gameOver()) {
+			AssetLoader.font.draw(batcher, "restart", 27, midPointY - 30);
+		}
+	}
+	
 	//runTime determines which frame the animation should display
-	public void render(float runTime) {
+	public void render(float delta, float runTime) {
 		
 		//sets screen to black to prevent flickering
 		Gdx.gl.glClearColor(0, 0, 0, 1); //specifies the rgb and alpha values when colors are cleared
@@ -133,28 +200,29 @@ public class GameRenderer {
 		//enables transparency
 		batcher.enableBlending();
 		
-		
-		//Draws bear at coordinates
-		//Retrieves the animation object form assetLoader
-		//passes in the runTime value in order to determine which frame to draw
-		if (!bear.Alive()) {
-			batcher.draw(bearDown, bear.getX(),
-                    bear.getY(), bear.getWidth() / 2.0f,
-                    bear.getHeight() / 2.0f, bear.getWidth(), bear.getHeight(),
-                    1, 1, bear.getRotation());
+		if(myWorld.running()) {
+			drawBear(runTime);
+			drawScore();
 		}
-		else if (bear.notScared()) { 
-            batcher.draw(bearDown, bear.getX(), bear.getY(),
-                    bear.getWidth() / 2.0f, bear.getHeight() / 2.0f,
-                    bear.getWidth(), bear.getHeight(), 1, 1, bear.getRotation());
+		else if (myWorld.pause()) {
+			drawBear(runTime);
+			drawScore();
+			
+			drawText();
+		}
+		else if (myWorld.title()) {
+			drawBear(runTime);
+			drawUI();
+		}
+		else if (myWorld.gameOver()) {
+			drawBear(runTime);
+			drawScore();
+			drawText();
+		
+		}
+	
 
-        } 
-		else {
-            batcher.draw(bearMid, bear.getX(),
-                    bear.getY(), bear.getWidth() / 2.0f,
-                    bear.getHeight() / 2.0f, bear.getWidth(), bear.getHeight(),
-                    1, 1, bear.getRotation());
-        }
+		
 		batcher.end();
 		
 		//Draws the collision circle on the bear

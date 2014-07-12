@@ -62,4 +62,9 @@ public class Wall extends Scrollable{
 		public Rectangle getBar() {
 			return bar;
 		}
+		
+		public void restart(float x, float scrollSpeed) {
+			velocity.x = scrollSpeed;
+			reset(x);
+		}
 }
