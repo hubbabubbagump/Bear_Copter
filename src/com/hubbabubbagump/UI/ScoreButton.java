@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.hubbabubbagump.Helpers.AssetLoader;
 import com.hubbabubbagump.Screens.GameScreen;
 
-public class StartButton {
+public class ScoreButton {
 	
 	private float x, y, width, height;
 	
@@ -18,10 +18,10 @@ public class StartButton {
 	private static int midPointY = (int) GameScreen.midScreen();
 	
 	//coordinates for where the start button is
-	public static final int BUTTON_X_LOCATION = 136/4 - (AssetLoader.start.getRegionWidth() / 2);
+	public static final int BUTTON_X_LOCATION = 136 / 4 * 3 - (AssetLoader.score.getRegionWidth() / 2);
 	public static final int BUTTON_Y_LOCATION = midPointY + 40;
 	
-	public StartButton(float x, float y, float width, float height, TextureRegion startButton) {
+	public ScoreButton(float x, float y, float width, float height, TextureRegion startButton) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -66,3 +66,4 @@ public class StartButton {
 		return BUTTON_Y_LOCATION;
 	}
 }
+

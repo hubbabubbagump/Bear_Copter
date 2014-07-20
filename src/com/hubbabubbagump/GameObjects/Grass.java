@@ -11,5 +11,17 @@ public class Grass extends Scrollable {
 		position.x = x;
 		velocity.x = scrollSpeed;
 	}
+	
+	public float getY() {
+		return position.y; //returns the y coordinate of where the grass should be
+	}
+	
+	 public float getX() {
+	     return position.x;
+	 }
+	 
+	 public void reverse(boolean high) {
+		 velocity.x = -velocity.x;
+	 }
 
 }

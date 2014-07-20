@@ -14,14 +14,18 @@ public class GameScreen implements Screen{
 	private float runTime = 0;
 	private static float mid;
 	
+	public static final int GAMEWIDTH = 136;
+	public static float GAMEHEIGHT;
+	
 	//Creates new world and renderer
 	public GameScreen() {
 		
 		//Calculates the midpoint of Y according to the device's height
 		float screenWidth = Gdx.graphics.getWidth();
 		float screenHeight = Gdx.graphics.getHeight();
-		float gameWidth = 136;
+		float gameWidth = GAMEWIDTH;
 		float gameHeight = screenHeight / (screenWidth / gameWidth);
+		GAMEHEIGHT = gameHeight;
 		int midPointY = (int) (gameHeight/2);
 		mid = midPointY;
 		
@@ -66,14 +70,14 @@ public class GameScreen implements Screen{
 	//Handles when the game is paused
 	@Override
 	public void pause() {
-		
+
 	}
 	
 	
 	//Handles what happens when the game is resumed
 	@Override
 	public void resume() {
-	
+		world.title();
 	}
 	
 	//Destructor

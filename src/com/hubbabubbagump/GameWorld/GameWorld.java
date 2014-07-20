@@ -2,6 +2,7 @@ package com.hubbabubbagump.GameWorld;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.hubbabubbagump.GameObjects.BearCopter;
 import com.hubbabubbagump.GameObjects.ScrollHandler;
 import com.hubbabubbagump.Helpers.AssetLoader;
@@ -15,23 +16,49 @@ public class GameWorld {
 	private Rectangle ground;
 	private Rectangle ceiling;
 	
-	private GameState currentState;
+	private Vector2 timeRate;
+	private Vector2 time;
+	private static final float TIMERATE = 1;
+
+	public static boolean high = false;
 	
-	private static float mid;
+	private static GameState currentState;
+	
+	private static float mid = GameScreen.midScreen();
 	
 	private static int score = 0;
+	private static int secondHS;
+	private static int thirdHS;
+	
 	private float runTime = 0;
+
+	public static final int GRASS_LOCATION = (int) (mid + 66);
+	public static final int RESTART_HEIGHT = (int) (mid - 5);
+	public static final int GAMEWIDTH = 136;
+	
+	public static final float VOLUME = 1.0f;
+	
+	public static final float DELAY = 10;
+	public static boolean runOnce = true;
+	
+	public boolean BGMpaused = false;
 	
 	public GameWorld(int midPointY) {
 		currentState = GameState.TITLE_STATE;
 		//Initializes the bear;
-		bear = new BearCopter(33, midPointY-5, 17, 12); //sets bear location to x = 33, y = midpoint of y - 5, initializes bear
-		mid = midPointY;
-		//creates new scrollHandlers, number sets position of grass
-		scroller = new ScrollHandler(midPointY + 66);
-		ground = new Rectangle(0, midPointY + 66, 126, 20);
-		ceiling = new Rectangle(0, -20, 126, 20);
+		bear = new BearCopter(33, RESTART_HEIGHT, 17, 12); //sets bear location to x = 33, y = midpoint of y - 5, initializes bear
 		
+		//creates new scrollHandlers, number sets position of grass
+		scroller = new ScrollHandler(GRASS_LOCATION);
+		ground = new Rectangle(0, GRASS_LOCATION, GAMEWIDTH, 20);
+		ceiling = new Rectangle(0, -20, GAMEWIDTH, 20);
+		
+		time = new Vector2(0, 0);
+		timeRate = new Vector2(TIMERATE, 0);
+		
+		AssetLoader.BGM.play(); //plays the BGM on loop
+		AssetLoader.BGM.setLooping(true);
+		AssetLoader.BGM.setVolume(VOLUME); //sets the volume
 	}
 	
 	public static int getScore() {
@@ -42,6 +69,16 @@ public class GameWorld {
 		return mid;
 	}
 	
+	public void counter(float delta) {
+		if(bear.Alive())
+		time.add(timeRate.cpy().scl(delta));
+	}
+	
+	public void counterReset() {
+		time.x = 0;
+	}
+	
+	
 	public void update(float delta) {
 		score = (int) bear.getScore();
 		runTime += delta;
@@ -51,7 +88,9 @@ public class GameWorld {
 		case TITLE_STATE:
 			updatingPause(delta);
 			break;
-		
+		case SCORE_STATE:
+			updatingPause(delta);
+			break;
 		case MAINGAME_STATE:
 			updatingRunning(delta);
 			break;
@@ -60,6 +99,22 @@ public class GameWorld {
 		}
 		
 	}
+	
+	private void high() {
+		if(high && runOnce) {
+			bear.reverse(high);
+			scroller.reverse(high);
+			runOnce = false;
+			AssetLoader.BGM.pause();
+			AssetLoader.trippy.play();
+			AssetLoader.trippy.setLooping(true);
+			AssetLoader.trippy.setVolume(VOLUME);
+			BGMpaused = true;
+			
+		}
+	}
+	
+	
 	
 	private void updatingPause(float delta) {
 		bear.updatePause(runTime);
@@ -70,28 +125,110 @@ public class GameWorld {
 		bear.update(delta);
 		scroller.update(delta);
 		
-		if(scroller.collides(bear)) {
-			if(bear.Alive()) {
-				//Game Over
-				scroller.stop();
-				bear.dead();
+		//collision checks
+		wallCheck();
+		groundCeilingCheck();
+		fruitCheck();
+		
+		high();
+		if(high) {
+			counter(delta);
+		}
+		if(time.x >= 10) {
+			high = false;
+			time.x = 0;
+			bear.reverse(high);
+			scroller.reverse(high);
+			runOnce = true;
+			AssetLoader.trippy.pause();
+			AssetLoader.BGM.play();
+			BGMpaused = false;
+		}
+
+	}
+	
+	//checks to see if the bear collides with any fruit
+	private void fruitCheck() {
+		if(bear.Alive()) {
+			if(scroller.collidesFruit1(bear)) {
+				scroller.ate1();
+				bear.fruitEaten();		
+				BearCopter.comboUp(); //if it does increases the combo counter
+			}
+			if(scroller.collidesFruit2(bear)) {
+				scroller.ate2();
+				bear.fruitEaten();		
+				BearCopter.comboUp();
+
+			}
+			if(scroller.collidesFruit3(bear)) {
+				scroller.ate3();
+				bear.fruitEaten();			
+				BearCopter.comboUp();
+
+			}
+			
+			if(scroller.collidesShroom(bear)) {
+				scroller.ateShroom();
+				bear.shroomEaten();
+				BearCopter.comboUp();
+				high = true;
+				time.x = 0;
 			}
 		}
-		
+	}
+	
+	private void highScore() {
+		if (score >= AssetLoader.getHighScore()) {
+			secondHS = AssetLoader.getHighScore();
+			thirdHS = AssetLoader.getSecondHighScore();
+			AssetLoader.setHighScore(score);
+			AssetLoader.setSecondHighScore(secondHS);
+			AssetLoader.setThirdHighScore(thirdHS);
+		}
+		else if (score >= AssetLoader.getSecondHighScore()) {
+			thirdHS = AssetLoader.getSecondHighScore();
+			AssetLoader.setSecondHighScore(score);
+			AssetLoader.setThirdHighScore(thirdHS);
+		}
+		else if (score >= AssetLoader.getThirdHighScore()) {
+			AssetLoader.setThirdHighScore(score);
+		}
+	}
+	
+	private void groundCeilingCheck() {
 		if(Intersector.overlaps(bear.getBoundingCircle(), ground)) {
 			scroller.stop();
 			bear.dead();
 			bear.deadAcceleration();
+			if(currentState != GameState.GAMEOVER_STATE) {
+				long dead = AssetLoader.dead.play();
+				AssetLoader.dead.setVolume(dead, VOLUME);
+			}
 			currentState = GameState.GAMEOVER_STATE;
 			
-			if (score > AssetLoader.getHighScore()) {
-				AssetLoader.setHighScore(score);
-			}
+			highScore();
+			
+			time.x = 0;
 		}
 		
 		if(Intersector.overlaps(bear.getBoundingCircle(), ceiling)) {
 			scroller.stop();
 			bear.dead();
+			
+			time.x = 0;
+		}
+	}
+	
+	private void wallCheck() {
+		if(scroller.collides(bear)) {
+			if(bear.Alive()) {
+				//Game Over
+				scroller.stop();
+				bear.dead();
+				
+				time.x = 0;
+			}
 		}
 	}
 	
@@ -100,6 +237,7 @@ public class GameWorld {
 		PAUSE_STATE,
 		MAINGAME_STATE,
 		GAMEOVER_STATE,
+		SCORE_STATE,
 	}
 	
 	public BearCopter getBear() {
@@ -114,11 +252,15 @@ public class GameWorld {
 		return currentState == GameState.TITLE_STATE;
 	}
 	
+	public void titleScreen() {
+		currentState = GameState.TITLE_STATE;
+	}
+	
 	public boolean pause() {
 		return currentState == GameState.PAUSE_STATE;
 	}
 	
-	public boolean running() {
+	public static boolean running() {
 		return currentState == GameState.MAINGAME_STATE;
 	}
 	
@@ -126,6 +268,13 @@ public class GameWorld {
 		return currentState == GameState.GAMEOVER_STATE;
 	}
 	
+	public boolean isScore() {
+		return currentState == GameState.SCORE_STATE;
+	}
+	
+	public void score() {
+		currentState = GameState.SCORE_STATE;
+	}
 	public void start() {
 		currentState = GameState.MAINGAME_STATE;
 	}
@@ -137,9 +286,22 @@ public class GameWorld {
 	public void restart() {
 		mid = GameScreen.midScreen();
 		currentState = GameState.PAUSE_STATE;
-		bear.restart((int) mid - 5);
+		bear.restart(RESTART_HEIGHT);
 		scroller.restart();
 		score = 0;
+		time.x = 0;
+		high = false;
+		runOnce = true;
+		
+		if (BGMpaused) {
+			AssetLoader.trippy.pause();
+			AssetLoader.BGM.play();
+			BGMpaused = false;
+		}
+	}
+
+	public static boolean isHigh() {
+		return high;
 	}
 
 			

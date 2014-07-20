@@ -1,15 +1,20 @@
 package com.hubbabubbagump.GameObjects;
 
 import com.badlogic.gdx.math.Vector2;
+import com.hubbabubbagump.GameWorld.GameWorld;
 
-public class Scrollable {
+public abstract class Scrollable {
 
 	 protected Vector2 position;
 	 protected Vector2 velocity;
 	 protected int width;
 	 protected int height;
 	 protected float yLoc;
+	 protected float fruitY;
 	 protected boolean isScrolledLeft;
+	 protected boolean isScrolledRight;
+	 
+	 private boolean high;
 	 
 	 public Scrollable(float x, float y, int width, int height, float scrollSpeed) {
 		 position = new Vector2(x, y);
@@ -17,15 +22,19 @@ public class Scrollable {
 		 this.width = width;
 		 this.height = height;
 		 isScrolledLeft = false;
+		 isScrolledRight = false;
 	 }
 	 
 	 //updates position
 	 public void update(float delta) {
+		 high = GameWorld.isHigh();		 
 		 position.add(velocity.cpy().scl(delta));
-		 
 		 //If object passes left side of screen, sets scrolledLeft to true
-		 if (position.x + width < 0) {
+		 if (position.x + width < 0 && !high) {
 			 isScrolledLeft = true;
+		 }
+		 else if (position.x > 136 && high) {
+			 isScrolledRight = true;
 		 }
 	 }
 	 
@@ -33,6 +42,7 @@ public class Scrollable {
 	 public void reset(float newX) {
 		 position.x = newX;
 		 isScrolledLeft = false;
+		 isScrolledRight = false;
 	 }
 	 
 	 //has textures stop scrolling
@@ -43,22 +53,17 @@ public class Scrollable {
 	 public boolean isScrolledLeft() {
 	        return isScrolledLeft;
 	 }
+	 
+	 public boolean isScrolledRight() {
+		 return isScrolledRight;
+	 }
 
 	 public float getTailX() {
 	     return position.x + width;
 	 }
 
-	 public float getX() {
-	     return position.x;
-	 }
-
-	 public float getY() {
-	     return position.y + yLoc;
-	 }
-	 
-	 public float grassGetY() {
-		 return position.y;
-	 }
+	 public abstract float getX();
+	 public abstract float getY();
 
 	 public int getWidth() {
 	     return width;

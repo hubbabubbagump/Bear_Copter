@@ -5,18 +5,22 @@ import java.util.List;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-//import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.hubbabubbagump.Helpers.AssetLoader;
 import com.hubbabubbagump.Helpers.InputHandler;
+import com.hubbabubbagump.Screens.GameScreen;
+import com.hubbabubbagump.UI.ScoreButton;
 import com.hubbabubbagump.UI.StartButton;
 import com.hubbabubbagump.GameObjects.BearCopter;
+import com.hubbabubbagump.GameObjects.Fruit;
 import com.hubbabubbagump.GameObjects.Grass;
 import com.hubbabubbagump.GameObjects.ScrollHandler;
+import com.hubbabubbagump.GameObjects.Shroom;
 import com.hubbabubbagump.GameObjects.Wall;
 
 
@@ -29,6 +33,7 @@ public class GameRenderer {
 	//draws images using (x,y) provided
 	private SpriteBatch batcher;
 
+	@SuppressWarnings("unused")
 	private int gameHeight;
 	private int midPointY;
 	
@@ -37,19 +42,54 @@ public class GameRenderer {
 	private ScrollHandler scroller;
 	private Grass frontGrass, backGrass;
 	private Wall wall1, wall2, wall3;
+	private Fruit fruit1, fruit2, fruit3;
+	private Shroom shroom;
 	
-	private TextureRegion start;
 	
 	//assets
 	private TextureRegion bg, grass;
-	//private Animation bearAnimation;
+	private TextureRegion start;
 	private TextureRegion bearMid, bearDown;
 	private TextureRegion brick;
+	private TextureRegion apple;
+	private TextureRegion banana;
+	private TextureRegion orange;
+	private TextureRegion gameOver;
+	private TextureRegion fruitA, fruitB, fruitC;
+	private TextureRegion shroomA;
+	private TextureRegion pauseText;
+	private TextureRegion scoreRegion;
+	private TextureRegion scoreSheet;
+	private TextureRegion redShroom;
+	private TextureRegion greenShroom;
+	private Animation rainbowAnimation;
 	
+	@SuppressWarnings("unused")
 	private List<StartButton> menuButtons;
+	@SuppressWarnings("unused")
+	private List<ScoreButton> menuScoreButtons;
 	StartButton button;
+	ScoreButton scoreButton;
 	private int startX;
 	private int startY;
+	private int scoreX;
+	private int scoreY;
+	private int score;
+	private int combo;
+	private int highScore;
+	private int secondHighScore;
+	private int thirdHighScore;
+	private static final float mid = GameScreen.midScreen();
+	
+	String strScore;
+	String strHighScore;
+	String strSecondHS;
+	String strThirdHS;
+	
+	private boolean isHigh;
+	private int ground = (int) (GameScreen.midScreen() + 66);
+	public static final int WALLS = ScrollHandler.WALLS;
+	//private Wall[] wall = new Wall[WALLS];
 	
 	//Creates camera and shapes.
 	public GameRenderer(GameWorld world, int gameHeight, int midPointY) {
@@ -59,10 +99,10 @@ public class GameRenderer {
 		this.midPointY = midPointY;
 		
 		this.menuButtons = InputHandler.getMenuButtons();
+		this.menuScoreButtons = InputHandler.getMenuScoreButtons();
 		
 		cam = new OrthographicCamera();
 		cam.setToOrtho(true, 136, gameHeight);
-		
 		batcher = new SpriteBatch();
 		//Attaches the batcher to the camera
 		batcher.setProjectionMatrix(cam.combined);
@@ -74,7 +114,11 @@ public class GameRenderer {
 		initAssets();
 		startX = StartButton.getX();
 		startY = StartButton.getY();
-		button = new StartButton(startX, startY, 40, 20, start);
+		scoreX = ScoreButton.getX();
+		scoreY = ScoreButton.getY();
+		button = new StartButton(startX, startY, 21, 21, start);
+		scoreButton = new ScoreButton(scoreX, scoreY, 21, 21, scoreRegion);
+		
 	}
 	
 	//Initializes gameObjects
@@ -86,26 +130,42 @@ public class GameRenderer {
 		wall1 = scroller.getWall1();
 		wall2 = scroller.getWall2();
 		wall3 = scroller.getWall3();
+		fruit1 = scroller.getFruit1();
+		fruit2 = scroller.getFruit2();
+		fruit3 = scroller.getFruit3();
+		shroom = scroller.getShroom();
 	}
 	
 	//initializes gameHelpers
 	private void initAssets() {
 		bg = AssetLoader.background;
 		grass = AssetLoader.grass;
-		//bearAnimation = AssetLoader.bearAnimation;
 		bearMid = AssetLoader.bear;
 		bearDown = AssetLoader.bearDown;
 		brick = AssetLoader.brick;
 		start = AssetLoader.start;
+		scoreRegion = AssetLoader.score;
+		apple = AssetLoader.apple;
+		banana = AssetLoader.banana;
+		orange = AssetLoader.orange;
+		gameOver = AssetLoader.gameOver;
+		pauseText = AssetLoader.pauseText;
+		scoreSheet = AssetLoader.highScores;
+		redShroom = AssetLoader.redShroom;
+		greenShroom = AssetLoader.greenShroom;
+		rainbowAnimation = AssetLoader.rainbowAnimation;
 	}
 	
 	private void drawGrass() {
-		batcher.draw(grass, frontGrass.getX(), frontGrass.grassGetY(), frontGrass.getWidth(), frontGrass.getHeight());
-	    batcher.draw(grass, backGrass.getX(), backGrass.grassGetY(), backGrass.getWidth(), backGrass.getHeight());
+		batcher.draw(grass, frontGrass.getX(), frontGrass.getY(), frontGrass.getWidth(), frontGrass.getHeight());
+	    batcher.draw(grass, backGrass.getX(), backGrass.getY(), backGrass.getWidth(), backGrass.getHeight());
 	}
 	
 	private void drawWalls() {
-	
+		
+		/*for (int i = 0; i < WALLS; i++) {
+			batcher.draw(brick, wall[i].getX(), wall[i].getY(), wall[i].getWidth(), wall[i].getHeight());
+		}*/
         batcher.draw(brick, wall1.getX(), wall1.getY(), wall1.getWidth(), wall1.getHeight());
 
         batcher.draw(brick, wall2.getX(), wall2.getY(), wall2.getWidth(), wall2.getHeight());
@@ -115,19 +175,69 @@ public class GameRenderer {
     }
 	
 	private void drawScore() {
-		int score = GameWorld.getScore();
-		String strScore = score + "";
+		score = GameWorld.getScore();
+		combo = BearCopter.COMBO;
+		String multiplier;
+		strScore = score + "";
 		AssetLoader.font.draw(batcher, "" + strScore, 130 - (11 * strScore.length()), 5);
 		
 		if (myWorld.gameOver()) {
-			int highScore = AssetLoader.getHighScore();
-			String strHighscore = "" + highScore;
-			AssetLoader.font.draw(batcher, "" + strHighscore, 130 - (11 * strHighscore.length()), midPointY + 80);
+			highScore = AssetLoader.getHighScore();
+			strHighScore = "" + highScore;
+			AssetLoader.font.draw(batcher, "" + strHighScore, 130 - (11 * strHighScore.length()), midPointY + 80);
 		}
+		
+		//draws the combo numbers
+		if (combo >= BearCopter.EXCELLENT_THRESHOLD) {
+			multiplier = "4x";
+		}
+		else if (combo >= BearCopter.GREAT_THRESHOLD) {
+			multiplier = "3x";
+		}
+		else if (combo >= BearCopter.GOOD_THRESHOLD) {
+			multiplier = "2x";
+		}
+		else {
+			multiplier = "1x";
+		}
+		String strCombo = "" + combo;
+		if (!myWorld.gameOver()) {
+			AssetLoader.font.draw(batcher, strCombo, 21, 5);
+			AssetLoader.fontSmall.draw(batcher, multiplier, 6, 10);
+		}
+		
 	}
 	
+	private void drawGameOver() {
+		score = GameWorld.getScore();
+		strScore = score + "";
+		highScore = AssetLoader.getHighScore();
+		strHighScore = "" + highScore;
+		
+		batcher.draw(gameOver, 18, mid - 40, 100, 80);
+		AssetLoader.fontSmall.draw(batcher, strScore, (float) (44 - (3.333333 * strScore.length())), mid - 13);
+		AssetLoader.fontSmall.draw(batcher, strHighScore, (float) (90 - (3.33333333 * strHighScore.length())), mid - 13);
+	}
+
 	private void drawUI() {
 		button.draw(batcher);
+		scoreButton.draw(batcher);
+	}
+	
+	private void drawScoreSheet() {
+		highScore = AssetLoader.getHighScore();
+		strHighScore = "" + highScore;
+		
+		secondHighScore = AssetLoader.getSecondHighScore();
+		strSecondHS = secondHighScore + "";
+		
+		thirdHighScore = AssetLoader.getThirdHighScore();
+		strThirdHS = thirdHighScore + "";
+		
+		batcher.draw(scoreSheet, 18, mid - 40, 100, 80);
+		AssetLoader.font.draw(batcher, strHighScore, (float) (76.5 - (5.5 * strHighScore.length())), (float) (mid - 17.5));
+		AssetLoader.font.draw(batcher, strSecondHS, (float) (76.5 - (5.5 * strSecondHS.length())), (float) (mid - 2));
+		AssetLoader.font.draw(batcher, strThirdHS, (float) (76.5 - (5.5 * strThirdHS.length())), (float) (mid + 14.5));
 	}
 	
 	private void drawBear(float runTime) {
@@ -155,12 +265,70 @@ public class GameRenderer {
 	}
 	
 	public void drawText() {
-		AssetLoader.font.draw(batcher, "Touch to", 26, midPointY - 50);
-		if (myWorld.pause()) {
-			AssetLoader.font.draw(batcher, "play", 42, midPointY - 30);
+		batcher.draw(pauseText, (float) 22.25, mid - 40, (float) 91.5, 15);
+	}
+	
+	public void drawFruit() {
+		//only renders the fruit if the bear hasn't "eaten" it
+		if(!fruit1.isEaten()) {
+			//checks to see which fruit to render
+			if(fruit1.fruitNumber() == 0) {
+				fruitA = apple;
+			}
+			else if(fruit1.fruitNumber() == 1) {
+				fruitA = banana;
+			}
+			else {
+				fruitA = orange;
+			}
+			batcher.draw(fruitA, fruit1.getX(), fruit1.getY(), fruit1.getWidth(), fruit1.getHeight());
 		}
-		else if (myWorld.gameOver()) {
-			AssetLoader.font.draw(batcher, "restart", 27, midPointY - 30);
+		
+		if(!fruit2.isEaten()) {
+			if(fruit2.fruitNumber() == 0) {
+				fruitB = apple;
+			}
+			else if(fruit2.fruitNumber() == 1) {
+				fruitB = banana;
+			}
+			else {
+				fruitB = orange;
+			}
+			batcher.draw(fruitB, fruit2.getX(), fruit2.getY(), fruit2.getWidth(), fruit2.getHeight());
+		}
+	
+		if(!fruit3.isEaten()) {
+			if(fruit3.fruitNumber() == 0) {
+				fruitC = apple;
+			}
+			else if(fruit3.fruitNumber() == 1) {
+				fruitC = banana;
+			}
+			else {
+				fruitC = orange;
+			}
+			batcher.draw(fruitC, fruit3.getX(), fruit3.getY(), fruit3.getWidth(), fruit3.getHeight());
+		}
+	
+		if(!shroom.isEaten()) {
+			if (shroom.shroomNumber() == 0) {
+				shroomA = redShroom;
+			}
+			else {
+				shroomA = greenShroom;
+			}
+			batcher.draw(shroomA, shroom.getX(), shroom.getY(), shroom.getWidth(), shroom.getHeight());
+		}
+	}
+	
+	public void drawBG(float runTime) {
+		isHigh = GameWorld.isHigh();
+		if(!isHigh) {
+			batcher.draw(bg, 0, midPointY + 23, 136, 43);
+
+		}
+		else if (isHigh) {
+			batcher.draw(rainbowAnimation.getKeyFrame(runTime), 0, ground - 200, 136, 200);
 		}
 	}
 	
@@ -186,28 +354,25 @@ public class GameRenderer {
 		shapeRenderer.rect(0,  midPointY + 77, 136, 52);
 		
 		shapeRenderer.end();
+		
 		batcher.begin();
 		
 		//disables transparency
 		batcher.disableBlending();
-		
-		batcher.draw(bg, 0, midPointY + 23, 136, 43);
-		
-		drawGrass();
-		
-		drawWalls();
-		
+				
 		//enables transparency
 		batcher.enableBlending();
 		
-		if(myWorld.running()) {
+		drawBG(runTime);
+		
+		if (GameWorld.running()) {
+			drawWalls();
 			drawBear(runTime);
+			drawFruit();
 			drawScore();
 		}
 		else if (myWorld.pause()) {
 			drawBear(runTime);
-			drawScore();
-			
 			drawText();
 		}
 		else if (myWorld.title()) {
@@ -216,12 +381,15 @@ public class GameRenderer {
 		}
 		else if (myWorld.gameOver()) {
 			drawBear(runTime);
-			drawScore();
-			drawText();
-		
+			drawFruit();
+			drawWalls();
+			drawGameOver();
 		}
-	
-
+		else if (myWorld.isScore()) {
+			drawBear(runTime);
+			drawScoreSheet();
+		}
+		drawGrass();
 		
 		batcher.end();
 		

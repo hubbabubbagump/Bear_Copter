@@ -5,7 +5,8 @@ import com.badlogic.gdx.Game;
 import com.hubbabubbagump.Helpers.AssetLoader;
 import com.hubbabubbagump.Screens.GameScreen;
 
-public class BCGame extends Game {
+
+public class BCGame extends Game{
 	
 	//Create method
 	@Override
@@ -13,6 +14,8 @@ public class BCGame extends Game {
 		System.out.println("Game Created.");
 		AssetLoader.load();
 		setScreen(new GameScreen()); //Calls GameScreen
+		
+		
 	}
 	
 	@Override

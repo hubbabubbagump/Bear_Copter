@@ -1,8 +1,24 @@
+Version 0.0.5
+-Adding sound effects and BGM
+-Added ads
+-randomized initial wall positions
+-Added a button to view high scores
+-updated button graphics
+-updated game over screen
+-added fruits
+-added shrooms
+-added score system
+-improved wall randomization
+-implemented a difficulty increase at 50 
+and 100 points respectively
+
 Version 0.0.4 (July 12)
--Added a scoring system based on a velocity / position system
+-Added a scoring system based on a
+ velocity / position system
 -Added font for numbers and text
 -Added gameStates
--Added a way to restart the game without closing and reopening the game
+-Added a way to restart the game without
+ closing and reopening the game
 -added a play button
 
 Version 0.0.3 (July 5)
@@ -33,3 +49,39 @@ Version 0.0.1 (June 21)
 on a black background.
 -Created BearCopter.java
 -Starting to handle physics of the avatar.
+
+Backup AndroidManifest.xml (it randomly gets reset and its a pain to generate a new one)
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hubbabubbagump.bear_a_copter.android"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/GdxTheme" >
+        <meta-data android:name="com.google.android.gms.version"
+                   android:value="@integer/google_play_services_version"/>
+        <activity
+            android:name="com.hubbabubbagump.bear_a_copter.android.AndroidLauncher"
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.google.android.gms.ads.AdActivity"
+                  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+    </application>
+	<uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+</manifest>
+
+
+
