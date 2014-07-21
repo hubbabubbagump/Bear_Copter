@@ -27,13 +27,15 @@ public class ScrollHandler {
     //Randomizer for the first 3 walls
     private int yPos1, yPos2, yPos3, yLength1, yLength2, yLength3;
     
-    private int shroomProbability;
-    private static final int SHROOMMAX = 30;
-    private static final int SHROOMNUMBER = 28;
-    private static boolean SHROOM = false;
-    private static int shroomHeight;
-    private static int wallHeight;
-    private static int wallY;
+    private int shroomProbability;			//creates a random number from 0 to
+    private static final int SHROOMMAX = 30;//SHROOMMAX to determine whether or not to spawn a shroom
+    private static final int SHROOMNUMBER = 28; //if the randomized number is > 28, spawns a shroom
+    
+    private static boolean SHROOM = false; // is true if a shroom exists in front of the bear
+    									   // only allows one shroom on the screen at a time
+    private static int shroomHeight; // creates a shroom halfway between the bottom 
+    private static int wallHeight;   // of the wall and ground or top of the wall
+    private static int wallY;        // and ceiling
     private static int wallX;
     private static int groundHeight;
     
@@ -48,7 +50,7 @@ public class ScrollHandler {
     public static final float FRUIT_SPACE = (float) 78.72; //The distance from the middle of a gap to the next
   
     //old speed value -49
-    public static int SCROLL_SPEED = -49;
+    public static int SCROLL_SPEED = -49; //scroll speed of the objects
     public static final int WALL_GAP = 58; //originally 49
     
     
@@ -56,9 +58,9 @@ public class ScrollHandler {
     public static final int HEIGHT = 50;
     public static final int LENGTH = 20;
     
-    public static int RESET_WALL;
+    //public static int RESET_WALL;
     
-    public static boolean USESCROLLEDLEFT = true;
+    public static boolean USESCROLLEDLEFT = true; // changes when velocity of the objects is reversed
     
     // Constructor receives a float that tells us where we need to create our 
     // Grass and Wall objects.

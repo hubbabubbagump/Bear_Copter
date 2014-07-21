@@ -393,18 +393,6 @@ public class GameRenderer {
 		
 		batcher.end();
 		
-		//Draws the collision circle on the bear
-		/*shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.circle(bear.getBoundingCircle().x, bear.getBoundingCircle().y, bear.getBoundingCircle().radius);
-		*/
-		
-		//bars 1 2 3 for collision detection
-		/*shapeRenderer.rect(wall1.getBar().x, wall1.getBar().y, wall1.getBar().width, wall1.getBar().height);
-		shapeRenderer.rect(wall2.getBar().x, wall2.getBar().y, wall2.getBar().width, wall2.getBar().height);
-		shapeRenderer.rect(wall3.getBar().x, wall3.getBar().y, wall3.getBar().width, wall3.getBar().height);
-		*/
-		//shapeRenderer.end();
 	}
 	
 }

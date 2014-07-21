@@ -1,9 +1,20 @@
+/* ======================================
+ * BearCopter 
+ * ======================================
+ * Current version: 0.5
+ * Release Date: TBA
+ * ======================================
+ * Created by Ethan Jung (hubbabubbagump)
+ * ethansjung@gmail.com
+ * ======================================
+ */
+
 package com.hubbabubbagump.bear_a_copter;
 
 //Imports
 import com.badlogic.gdx.Game;
 import com.hubbabubbagump.Helpers.AssetLoader;
-import com.hubbabubbagump.Screens.GameScreen;
+import com.hubbabubbagump.Screens.SplashScreen;
 
 
 public class BCGame extends Game{
@@ -13,7 +24,7 @@ public class BCGame extends Game{
 	public void create() {
 		System.out.println("Game Created.");
 		AssetLoader.load();
-		setScreen(new GameScreen()); //Calls GameScreen
+		setScreen(new SplashScreen(this));
 		
 		
 	}

@@ -23,6 +23,7 @@ public class AssetLoader {
 	public static Texture rainbowA;
 	public static Texture rainbowB;
 	public static Texture rainbowC;
+	public static Texture splashScreen;
 	
 	public static TextureRegion background, grass;
 	public static TextureRegion start;
@@ -38,6 +39,7 @@ public class AssetLoader {
 	public static TextureRegion rainbow1;
 	public static TextureRegion rainbow2;
 	public static TextureRegion rainbow3;
+	public static TextureRegion splash;
 	
 	public static Animation rainbowAnimation;
 	
@@ -100,6 +102,12 @@ public class AssetLoader {
 		
 		rainbowC = new Texture(Gdx.files.internal("data/rainbow3.png"));
 		rainbowC.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		splashScreen = new Texture(Gdx.files.internal("data/splash.png"));
+		splashScreen.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		splash = new TextureRegion(splashScreen, 0, 0, 136, 64);
+		splash.flip(false, true);
 		
 		rainbow1 = new TextureRegion(rainbowA, 0, 0, 136, 200);
 		rainbow1.flip(false, true);

@@ -1,5 +1,6 @@
 package com.hubbabubbagump.GameWorld;
 
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -9,6 +10,8 @@ import com.hubbabubbagump.Helpers.AssetLoader;
 import com.hubbabubbagump.Screens.GameScreen;
 
 public class GameWorld {
+	
+	private FPSLogger fps;
 	
 	private BearCopter bear;
 	private ScrollHandler scroller;
@@ -36,7 +39,7 @@ public class GameWorld {
 	public static final int RESTART_HEIGHT = (int) (mid - 5);
 	public static final int GAMEWIDTH = 136;
 	
-	public static final float VOLUME = 1.0f;
+	public static final float VOLUME = 0.1f;
 	
 	public static final float DELAY = 10;
 	public static boolean runOnce = true;
@@ -51,7 +54,7 @@ public class GameWorld {
 		//creates new scrollHandlers, number sets position of grass
 		scroller = new ScrollHandler(GRASS_LOCATION);
 		ground = new Rectangle(0, GRASS_LOCATION, GAMEWIDTH, 20);
-		ceiling = new Rectangle(0, -20, GAMEWIDTH, 20);
+		ceiling = new Rectangle(0, -33, GAMEWIDTH, 20);
 		
 		time = new Vector2(0, 0);
 		timeRate = new Vector2(TIMERATE, 0);
@@ -59,6 +62,8 @@ public class GameWorld {
 		AssetLoader.BGM.play(); //plays the BGM on loop
 		AssetLoader.BGM.setLooping(true);
 		AssetLoader.BGM.setVolume(VOLUME); //sets the volume
+		
+		fps = new FPSLogger();
 	}
 	
 	public static int getScore() {
@@ -80,6 +85,7 @@ public class GameWorld {
 	
 	
 	public void update(float delta) {
+		fps.log();
 		score = (int) bear.getScore();
 		runTime += delta;
 		
@@ -101,7 +107,8 @@ public class GameWorld {
 	}
 	
 	private void high() {
-		if(high && runOnce) {
+		if(high && runOnce) { //checks if the bear is high
+							  //runOnce makes it run only once during the duration that the bear is high
 			bear.reverse(high);
 			scroller.reverse(high);
 			runOnce = false;
@@ -131,11 +138,13 @@ public class GameWorld {
 		fruitCheck();
 		
 		high();
+		
+		//if the bear is "high"
 		if(high) {
 			counter(delta);
 		}
-		if(time.x >= 10) {
-			high = false;
+		if(time.x >= DELAY) { //once 10 seconds is up
+			high = false;  //reverts everything back
 			time.x = 0;
 			bear.reverse(high);
 			scroller.reverse(high);
@@ -147,7 +156,7 @@ public class GameWorld {
 
 	}
 	
-	//checks to see if the bear collides with any fruit
+	//checks to see if the bear collides with any fruit or shrooms
 	private void fruitCheck() {
 		if(bear.Alive()) {
 			if(scroller.collidesFruit1(bear)) {
@@ -179,6 +188,7 @@ public class GameWorld {
 	}
 	
 	private void highScore() {
+		//sets high scores accordingly
 		if (score >= AssetLoader.getHighScore()) {
 			secondHS = AssetLoader.getHighScore();
 			thirdHS = AssetLoader.getSecondHighScore();
@@ -211,6 +221,7 @@ public class GameWorld {
 			
 			time.x = 0;
 		}
+		
 		
 		if(Intersector.overlaps(bear.getBoundingCircle(), ceiling)) {
 			scroller.stop();

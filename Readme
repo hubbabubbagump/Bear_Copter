@@ -1,4 +1,24 @@
-Version 0.0.5
+======================================
+BEARCOPTER
+======================================
+
+Version 0.5
+Release Date: TBA
+
+======================================
+Created by
+======================================
+
+Ethan Jung (hubbabubbagump)
+
+======================================
+Latest update
+======================================
+
+Release date
+July 20 2014
+
+Version 0.5
 -Adding sound effects and BGM
 -Added ads
 -randomized initial wall positions
@@ -9,19 +29,25 @@ Version 0.0.5
 -added shrooms
 -added score system
 -improved wall randomization
--implemented a difficulty increase at 50 
-and 100 points respectively
+-implemented a difficulty increase at 
+ 50 and 100 points respectively
+ -added splashscreen and logo
 
-Version 0.0.4 (July 12)
+======================================
+Version History
+======================================
+
+Version 0.4
 -Added a scoring system based on a
  velocity / position system
 -Added font for numbers and text
 -Added gameStates
--Added a way to restart the game without
- closing and reopening the game
+-Added a way to restart the game
+ without closing and reopening the
+ game
 -added a play button
 
-Version 0.0.3 (July 5)
+Version 0.3
 -made textures
 -added animations
 -added sprites
@@ -29,28 +55,79 @@ Version 0.0.3 (July 5)
 -added collision
 -added ground and ceiling
 
-Version 0.0.2 (June 28)
--Initialized a location for the bear to 
-start when the game begins
--Retrieves the width and height of the device
+Version 0.2
+-Initialized a location for the
+ bear to start when the game begins
+-Retrieves the width and height of
+ the device
 -Added BearCopter.java which currently
-handles the acceleration and velocity of the bear
+ handles the acceleration and velocity
+ of the bear
 -implemented velocity limit of 200
--uses a y acceleration value to simulate gravity
--Implemented Inputhandler which handles input
+-uses a y acceleration value to
+ simulate gravity
+-Implemented Inputhandler which handles 
+input
 -returns true when screen is pressed
 
-Version 0.0.1 (June 21)
+Version 0.1 
 -Created BCGame.java
 -Created GameRenderer.java
 -Created GameWorld.java
 -Created GameScreen.java
--Programmed a rectangle to travel left -> right
-on a black background.
+-Programmed a rectangle to travel 
+left -> right on a black background.
 -Created BearCopter.java
--Starting to handle physics of the avatar.
+-Starting to handle physics of the
+ avatar.
 
-Backup AndroidManifest.xml (it randomly gets reset and its a pain to generate a new one)
+======================================
+Important known problems
+======================================
+
+n/a
+
+======================================
+Contact information
+======================================
+
+ethansjung@gmail.com
+
+======================================
+Thanks to
+======================================
+
+Quinlan
+Abrar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Backup AndroidManifest.xml (it tends to randomly reset and it's a pain to generate a new one)
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hubbabubbagump.bear_a_copter.android"

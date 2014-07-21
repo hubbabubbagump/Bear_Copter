@@ -77,7 +77,7 @@ public class GameScreen implements Screen{
 	//Handles what happens when the game is resumed
 	@Override
 	public void resume() {
-		world.title();
+		
 	}
 	
 	//Destructor

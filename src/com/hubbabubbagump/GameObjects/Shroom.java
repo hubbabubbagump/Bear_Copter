@@ -28,7 +28,7 @@ public class Shroom extends Scrollable{
 		rand = new Random();
 		circle = new Circle();
 		
-		//Creates a random number to decide which fruit is rendered
+		//Creates a random number to decide which shroom is rendered
 		shroom_number = rand.nextInt(SHROOMAMOUNT);
 	}
 	
