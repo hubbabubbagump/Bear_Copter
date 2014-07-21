@@ -139,8 +139,6 @@ public class AssetLoader {
 		gameOver = new TextureRegion(gameOverScreen, 0, 0, 100, 80);
 		gameOver.flip(false, true);
 		
-		//Add logo in the future
-		
 		apple = new TextureRegion(fruit, 10, 0, 10, 9);
 		apple.flip(false, true);
 		banana = new TextureRegion(fruit, 0, 0, 10, 10);

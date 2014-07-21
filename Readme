@@ -19,6 +19,7 @@ Release date
 July 20 2014
 
 Version 0.5
+-changed way versions are handled
 -Adding sound effects and BGM
 -Added ads
 -randomized initial wall positions
