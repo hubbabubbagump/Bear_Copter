@@ -13,8 +13,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AssetLoader {
 	
 	public static Texture texture;
+	public static Texture wallMid;
+	public static Texture wallEnd;
+	public static Texture bg1;
+	public static Texture bg2;
 	public static Texture startButton;
 	public static Texture scoreButton;
+	public static Texture menuButton;
+	public static Texture startClicked;
+	public static Texture scoreClicked;
+	public static Texture menuClicked;
 	public static Texture gameOverScreen;
 	public static Texture startText;
 	public static Texture fruit;
@@ -24,10 +32,14 @@ public class AssetLoader {
 	public static Texture rainbowB;
 	public static Texture rainbowC;
 	public static Texture splashScreen;
+	public static Texture grassArea;
+	public static Texture dirtArea;
 	
-	public static TextureRegion background, grass;
-	public static TextureRegion start;
-	public static TextureRegion score;
+	public static TextureRegion backgroundLight;
+	public static TextureRegion backgroundDark;
+	public static TextureRegion wallTop;
+	public static TextureRegion wallBottom;
+	public static TextureRegion grass;
 	public static TextureRegion gameOver;
 	public static TextureRegion pauseText;
 	public static TextureRegion apple;
@@ -40,6 +52,13 @@ public class AssetLoader {
 	public static TextureRegion rainbow2;
 	public static TextureRegion rainbow3;
 	public static TextureRegion splash;
+	public static TextureRegion dirt;
+	public static TextureRegion start;
+	public static TextureRegion score;
+	public static TextureRegion menu;
+	public static TextureRegion startDown;
+	public static TextureRegion scoreDown;
+	public static TextureRegion menuDown;
 	
 	public static Animation rainbowAnimation;
 	
@@ -73,6 +92,24 @@ public class AssetLoader {
 		texture = new Texture(Gdx.files.internal("data/texture.png"));
 		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		
+		menuButton = new Texture(Gdx.files.internal("data/menubutton.png"));
+		menuButton.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		startClicked = new Texture(Gdx.files.internal("data/startclicked.png"));
+		startClicked.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		scoreClicked = new Texture(Gdx.files.internal("data/scoreClicked.png"));
+		scoreClicked.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+		menuClicked = new Texture(Gdx.files.internal("data/menuclicked.png"));
+		menuClicked.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		wallMid = new Texture(Gdx.files.internal("data/pipemid.png"));
+		wallMid.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		wallEnd = new Texture(Gdx.files.internal("data/pipeend.png"));
+		wallEnd.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
 		startButton = new Texture(Gdx.files.internal("data/startCircle.png"));
 		startButton.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		
@@ -94,6 +131,12 @@ public class AssetLoader {
 		shrooms = new Texture(Gdx.files.internal("data/shrooms.png"));
 		shrooms.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		
+		bg1 = new Texture(Gdx.files.internal("data/backgroundlight.png"));
+		bg1.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		bg2 = new Texture(Gdx.files.internal("data/backgrounddark.png"));
+		bg2.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
 		rainbowA = new Texture(Gdx.files.internal("data/rainbow1.png"));
 		rainbowA.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		
@@ -105,6 +148,15 @@ public class AssetLoader {
 		
 		splashScreen = new Texture(Gdx.files.internal("data/splash.png"));
 		splashScreen.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		grassArea = new Texture(Gdx.files.internal("data/grass.png"));
+		grassArea.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		dirtArea = new Texture(Gdx.files.internal("data/dirt.png"));
+		dirtArea.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		
+		dirt = new TextureRegion(dirtArea, 0, 0, 136, 50);
+		dirt.flip(false, true);
 		
 		splash = new TextureRegion(splashScreen, 0, 0, 136, 64);
 		splash.flip(false, true);
@@ -133,6 +185,18 @@ public class AssetLoader {
 		score = new TextureRegion(scoreButton, 0, 0, 21, 21);
 		score.flip(false, true);
 		
+		menu = new TextureRegion(menuButton, 0, 0, 21, 21);
+		menu.flip(false, true);
+		
+		startDown = new TextureRegion(startClicked, 0, 0, 21, 21);
+		startDown.flip(false, true);
+		
+		scoreDown = new TextureRegion(scoreClicked, 0, 0, 21, 21);
+		scoreDown.flip(false, true);
+		
+		menuDown = new TextureRegion(menuClicked, 0, 0, 21, 21);
+		menuDown.flip(false, true);
+		
 		pauseText = new TextureRegion(startText, 0, 0, 61, 10);
 		pauseText.flip(false, true);
 		
@@ -148,10 +212,13 @@ public class AssetLoader {
 		
 		//Creates a new texture using image starting at (0,0) 
 		//with 136 width and 43 height.
-		background = new TextureRegion(texture, 0, 0, 136, 43);
-		background.flip(false, true);
+		backgroundLight = new TextureRegion(bg1, 0, 0, 136, 200);
+		backgroundLight.flip(false, true);
+		
+		backgroundDark = new TextureRegion( bg2, 0, 0, 136, 200);
+		backgroundDark.flip(false, true);
 				
-		grass = new TextureRegion(texture, 0, 43, 143, 11);
+		grass = new TextureRegion(grassArea, 0, 0, 136, 11);
 		grass.flip(false, true);
 		
 		bearDown = new TextureRegion(texture, 136, 16, 18, 16);
@@ -160,8 +227,14 @@ public class AssetLoader {
 		bear = new TextureRegion(texture, 136, 0, 18, 16);
 		bear.flip(false, true);
 		
-		brick = new TextureRegion(texture, 154, 0, 22, 5);
+		brick = new TextureRegion(wallMid, 0, 0, 22, 5);
 		brick.flip(false, true);
+		
+		wallTop = new TextureRegion(wallEnd, 0, 0, 22, 5);
+		wallTop.flip(false, true);
+		
+		wallBottom = new TextureRegion(wallEnd, 0, 0, 22, 5);
+		wallBottom.flip(false, false);
 		
 		font = new BitmapFont(Gdx.files.internal("data/bitfont.fnt"));
 		font.setScale(.5f, -.5f);
@@ -222,10 +295,21 @@ public class AssetLoader {
 		scoreButton.dispose();
 		startText.dispose();
 		scoreSheet.dispose();
+		menuButton.dispose();
+		startClicked.dispose();
+		scoreClicked.dispose();
+		menuClicked.dispose();
 		shrooms.dispose();
 		rainbowA.dispose();
 		rainbowB.dispose();
 		rainbowC.dispose();
+		wallMid.dispose();
+		wallEnd.dispose();
+		bg1.dispose();
+		bg2.dispose();
+		splashScreen.dispose();
+		grassArea.dispose();
+		dirtArea.dispose();
 
 		up.dispose();
 		dead.dispose();

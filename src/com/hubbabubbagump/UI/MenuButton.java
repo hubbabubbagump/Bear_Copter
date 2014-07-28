@@ -6,29 +6,32 @@ import com.badlogic.gdx.math.Rectangle;
 import com.hubbabubbagump.Helpers.AssetLoader;
 import com.hubbabubbagump.Screens.GameScreen;
 
-public class ScoreButton {
+public class MenuButton {
 	
 	private float x, y, width, height;
 	
-	private TextureRegion scoreButton;
-	private TextureRegion scoreDown;
+	private TextureRegion menuButton;
+	private TextureRegion menuDown;
 	
 	private Rectangle bounds;
 	
+	int SX;
+	int SY;
+	
 	private boolean press = false;
-	private static int midPointY = (int) GameScreen.midScreen();
 	
-	//coordinates for where the start button is
-	public static final int BUTTON_X_LOCATION = 136 / 4 * 3 - (AssetLoader.score.getRegionWidth() / 2);
-	public static final int BUTTON_Y_LOCATION = midPointY + 40;
+	//coordinates for where the menu button is
+	public static final int BUTTON_X_LOCATION = 18;
+	public static final int BUTTON_Y_LOCATION = AssetLoader.start.getRegionHeight() / 2;
 	
-	public ScoreButton(float x, float y, float width, float height, TextureRegion scoreButton, TextureRegion scoreDown) {
+	public MenuButton(float x, float y, float width, float height, TextureRegion menuButton, TextureRegion menuDown) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.scoreButton = scoreButton;
-		this.scoreDown = scoreDown;
+		this.menuButton = menuButton;
+		this.menuDown = menuDown;
+		
 		
 		bounds = new Rectangle(x, y, width, height);
 	}
@@ -39,13 +42,14 @@ public class ScoreButton {
 	
 	public void draw(SpriteBatch batcher) {
 		
-		batcher.draw(scoreButton, x, y, width, height);
+		batcher.draw(menuButton, x, y, width, height);
 		
 	}
 	
 	public void drawDown(SpriteBatch batcher) {
-		batcher.draw(scoreDown, x, y, width, height);
+		batcher.draw(menuDown, x, y, width, height);
 	}
+	
 	public boolean downTouch(int screenX, int screenY) {
 		if(bounds.contains(screenX, screenY)) {
 			press = true;
@@ -55,11 +59,8 @@ public class ScoreButton {
 		return false;
 	}
 	
-	public boolean isPressed() {
-		return press;
-	}
-	
 	public boolean upTouch(int screenX, int screenY) {
+		
 		if(bounds.contains(screenX, screenY) && press) {
 			press = false;
 			return true;
@@ -76,5 +77,6 @@ public class ScoreButton {
 	public static int getY() {
 		return BUTTON_Y_LOCATION;
 	}
+	
+	
 }
-

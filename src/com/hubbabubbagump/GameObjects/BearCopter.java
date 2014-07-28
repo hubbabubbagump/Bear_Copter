@@ -114,7 +114,7 @@ public class BearCopter {
 
 		// sets circle center to (9, 8) with respect to the bear
 		// sets radius to 6.5f
-		boundCircle.set(CIRCLE_X, CIRCLE_Y, CIRCLE_RADIUS);
+		boundCircle.set(CIRCLE_X + 1, CIRCLE_Y - 2, CIRCLE_RADIUS);
 
 		// rotating ccw
 		if (velocity.y < 0) {

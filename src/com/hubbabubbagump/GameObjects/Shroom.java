@@ -37,7 +37,7 @@ public class Shroom extends Scrollable{
 		super.update(delta);
 		
 		//position.x and position.x are the coordinates for the center of the circle
-		circle.set(getX(), getY(), RADIUS);
+		circle.set(getX() + 5, getY() + 5, RADIUS);
 
 	}
 	

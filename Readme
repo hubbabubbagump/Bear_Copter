@@ -2,7 +2,7 @@
 BEARCOPTER
 ======================================
 
-Version 0.5
+Version 0.6
 Release Date: TBA
 
 ======================================
@@ -15,8 +15,30 @@ Ethan Jung (hubbabubbagump)
 Latest update
 ======================================
 
-Release date
-July 20 2014
+Release date:
+July 26 2014
+
+Version 0.6
+-fixed a bug in wall randomization
+-fixed hitboxes
+-added a button to return to the
+ menu on the game over screen
+ -raised location of ceiling
+  (removing it altogether breaks
+  the game)
+-revamped graphics:
+	-changed light background
+	-added dark background
+	-updated wall graphics
+	-created graphics for dirt
+	-fixed grass graphics
+	-added animations for button 
+	 presses
+	
+
+======================================
+Version History
+======================================
 
 Version 0.5
 -changed way versions are handled
@@ -32,11 +54,7 @@ Version 0.5
 -improved wall randomization
 -implemented a difficulty increase at 
  50 and 100 points respectively
- -added splashscreen and logo
-
-======================================
-Version History
-======================================
+-added splashscreen and logo
 
 Version 0.4
 -Added a scoring system based on a

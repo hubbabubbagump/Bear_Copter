@@ -43,8 +43,8 @@ public class Fruit extends Scrollable{
 		super.update(delta);
 		
 			//position.x and position.x are the coordinates for the center of the circle
-		circle.set(getX(), getY(), RADIUS);
-		bigCircle.set(getX(), getY(), BIG_RADIUS);
+		circle.set(getX() + 5, getY() + 5, RADIUS);
+		bigCircle.set(getX() + 5, getY() + 5, BIG_RADIUS);
 		isHigh = GameWorld.isHigh();
 	}
 	

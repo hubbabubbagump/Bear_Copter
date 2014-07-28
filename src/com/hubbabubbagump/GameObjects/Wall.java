@@ -49,7 +49,7 @@ public class Wall extends Scrollable{
 		
 		public void randomize() {
 			score = GameWorld.getScore();
-			
+			HEIGHT_LIMIT = (int) (LENGTH / 5);
 			//creates a random number to determine length of wall based on score
 			if (score >= 100) {
 				HEIGHT_LIMIT = (int) (LENGTH / 5) + 30;

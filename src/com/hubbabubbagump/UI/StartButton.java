@@ -11,8 +11,12 @@ public class StartButton {
 	private float x, y, width, height;
 	
 	private TextureRegion startButton;
+	private TextureRegion startDown;
 	
 	private Rectangle bounds;
+	
+	int SX;
+	int SY;
 	
 	private boolean press = false;
 	private static int midPointY = (int) GameScreen.midScreen();
@@ -21,12 +25,14 @@ public class StartButton {
 	public static final int BUTTON_X_LOCATION = 136/4 - (AssetLoader.start.getRegionWidth() / 2);
 	public static final int BUTTON_Y_LOCATION = midPointY + 40;
 	
-	public StartButton(float x, float y, float width, float height, TextureRegion startButton) {
+	public StartButton(float x, float y, float width, float height, TextureRegion startButton, TextureRegion startDown) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.startButton = startButton;
+		this.startDown = startDown;
+		
 		
 		bounds = new Rectangle(x, y, width, height);
 	}
@@ -36,7 +42,13 @@ public class StartButton {
 	}
 	
 	public void draw(SpriteBatch batcher) {
+		
 		batcher.draw(startButton, x, y, width, height);
+		
+	}
+	
+	public void drawDown(SpriteBatch batcher) {
+		batcher.draw(startDown, x, y, width, height);
 	}
 	
 	public boolean downTouch(int screenX, int screenY) {
@@ -49,6 +61,7 @@ public class StartButton {
 	}
 	
 	public boolean upTouch(int screenX, int screenY) {
+		
 		if(bounds.contains(screenX, screenY) && press) {
 			press = false;
 			return true;
@@ -65,4 +78,6 @@ public class StartButton {
 	public static int getY() {
 		return BUTTON_Y_LOCATION;
 	}
+	
+	
 }

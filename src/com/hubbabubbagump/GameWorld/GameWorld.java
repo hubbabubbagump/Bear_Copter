@@ -1,5 +1,7 @@
 package com.hubbabubbagump.GameWorld;
 
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,6 +14,10 @@ import com.hubbabubbagump.Screens.GameScreen;
 public class GameWorld {
 	
 	private FPSLogger fps;
+	
+	private static Random rand;
+	
+	public static int bg;
 	
 	private BearCopter bear;
 	private ScrollHandler scroller;
@@ -46,6 +52,10 @@ public class GameWorld {
 	
 	public boolean BGMpaused = false;
 	
+	public static boolean startDown = false;
+	public static boolean scoreDown = false;
+	public static boolean menuDown = false;
+	
 	public GameWorld(int midPointY) {
 		currentState = GameState.TITLE_STATE;
 		//Initializes the bear;
@@ -64,14 +74,20 @@ public class GameWorld {
 		AssetLoader.BGM.setVolume(VOLUME); //sets the volume
 		
 		fps = new FPSLogger();
+		rand = new Random();
+		bg = rand.nextInt(2);
 	}
 	
 	public static int getScore() {
 		return score;
 	}
 	
-	public static float getMid(){
+	public static float getMid() {
 		return mid;
+	}
+	
+	public static int background() {
+		return bg;
 	}
 	
 	public void counter(float delta) {
@@ -120,8 +136,6 @@ public class GameWorld {
 			
 		}
 	}
-	
-	
 	
 	private void updatingPause(float delta) {
 		bear.updatePause(runTime);
@@ -304,6 +318,27 @@ public class GameWorld {
 		high = false;
 		runOnce = true;
 		
+		bg = rand.nextInt(2);
+		
+		if (BGMpaused) {
+			AssetLoader.trippy.pause();
+			AssetLoader.BGM.play();
+			BGMpaused = false;
+		}
+	}
+	
+	public void toMenu() {
+		mid = GameScreen.midScreen();
+		currentState = GameState.TITLE_STATE;
+		bear.restart(RESTART_HEIGHT);
+		scroller.restart();
+		score = 0;
+		time.x = 0;
+		high = false;
+		runOnce = true;
+		
+		bg = rand.nextInt(2);
+		
 		if (BGMpaused) {
 			AssetLoader.trippy.pause();
 			AssetLoader.BGM.play();
@@ -315,5 +350,27 @@ public class GameWorld {
 		return high;
 	}
 
-			
+	public void startButtonDown() {
+		startDown = true;
+	}
+	
+	public void startButtonUp() {
+		startDown = false;
+	}
+	
+	public void scoreButtonDown() {
+		scoreDown = true;
+	}
+	
+	public void scoreButtonUp() {
+		scoreDown = false;
+	}
+	
+	public void menuButtonDown() {
+		menuDown = true;
+	}
+	
+	public void menuButtonUp() {
+		menuDown = false;
+	}
 }

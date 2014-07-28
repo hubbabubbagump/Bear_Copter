@@ -9,6 +9,8 @@ public class ScrollHandler {
 	
 	
     private Grass frontGrass, backGrass;
+    private Background frontBG, backBG;
+    private Dirt frontDirt, backDirt;
     private  Wall wall1;
 	private  Wall wall2;
 	private Wall wall3;
@@ -29,7 +31,7 @@ public class ScrollHandler {
     
     private int shroomProbability;			//creates a random number from 0 to
     private static final int SHROOMMAX = 30;//SHROOMMAX to determine whether or not to spawn a shroom
-    private static final int SHROOMNUMBER = 28; //if the randomized number is > 28, spawns a shroom
+    private static final int SHROOMNUMBER = 1; //if the randomized number is > 28, spawns a shroom
     
     private static boolean SHROOM = false; // is true if a shroom exists in front of the bear
     									   // only allows one shroom on the screen at a time
@@ -51,12 +53,15 @@ public class ScrollHandler {
   
     //old speed value -49
     public static int SCROLL_SPEED = -49; //scroll speed of the objects
+    public static final int BG_SPEED = -5;
     public static final int WALL_GAP = 58; //originally 49
     
     
     //limits for randomizing first 3 walls
     public static final int HEIGHT = 50;
     public static final int LENGTH = 20;
+    
+    private int ground = (int) (GameScreen.midScreen() + 66); //y location for the ground
     
     //public static int RESET_WALL;
     
@@ -76,9 +81,16 @@ public class ScrollHandler {
     	yLength2 = rand.nextInt(LENGTH) + 50;
     	yLength3 = rand.nextInt(LENGTH) + 50;
     	
+    	//consturcts the background
+    	frontBG = new Background(0, ground - 200, 136, 200, BG_SPEED);
+    	backBG = new Background(frontBG.getTailX(), ground - 200, 136, 200, BG_SPEED);
+    	
     	//constructs the first frontGrass and backGrass
-    	frontGrass = new Grass(0, yPos, 143, 11, SCROLL_SPEED);
-    	backGrass = new Grass(frontGrass.getTailX(), yPos, 143, 11, SCROLL_SPEED);
+    	frontGrass = new Grass(0, yPos, 136, 11, SCROLL_SPEED);
+    	backGrass = new Grass(frontGrass.getTailX(), yPos, 136, 11, SCROLL_SPEED);
+    	
+    	frontDirt = new Dirt(9, yPos + 11, 136, 50, SCROLL_SPEED);
+    	backDirt = new Dirt(frontDirt.getTailX(), yPos + 11, 136, 50, SCROLL_SPEED);
     	
     	/*wall[0] = new Wall(210, yPos1, 22, yLength1, SCROLL_SPEED);
     	if (WALLS >= 2) {
@@ -117,7 +129,11 @@ public class ScrollHandler {
 
         frontGrass.update(delta);
         backGrass.update(delta);
-
+        frontBG.update(delta);
+        backBG.update(delta);
+        frontDirt.update(delta);
+        backDirt.update(delta);
+        
         // Same with grass
         if (frontGrass.isScrolledLeft()) {
             frontGrass.reset(backGrass.getTailX());
@@ -126,6 +142,20 @@ public class ScrollHandler {
             backGrass.reset(frontGrass.getTailX());
 
         }
+        
+        if(frontDirt.isScrolledLeft()) {
+        	frontDirt.reset(backDirt.getTailX());
+        }
+        else if (backDirt.isScrolledLeft()) {
+        	backDirt.reset(frontDirt.getTailX());
+        }
+        
+        if (frontBG.isScrolledLeft()) {
+        	frontBG.reset(backBG.getTailX());
+        }
+        else if (backBG.isScrolledLeft()) {
+        	backBG.reset(frontBG.getTailX());
+        }
 
     }
     
@@ -133,6 +163,10 @@ public class ScrollHandler {
 		rand = new Random();
         frontGrass.update(delta);
         backGrass.update(delta);
+        frontDirt.update(delta);
+        backDirt.update(delta);
+        frontBG.update(delta);
+        backBG.update(delta);
         wall1.update(delta);
         wall2.update(delta);
         wall3.update(delta);
@@ -166,6 +200,14 @@ public class ScrollHandler {
         
         //wall 1 retrieves wall 2, wall 2 retrieves wall 3, etc.
         //Same for grass.
+        
+        if (frontBG.isScrolledLeft()) {
+        	frontBG.reset(backBG.getTailX());
+        }
+        else if (backBG.isScrolledLeft()) {
+        	backBG.reset(frontBG.getTailX());
+        }
+        
         if (USESCROLLEDLEFT) {
 	        if (wall1.isScrolledLeft()) {
 
@@ -219,6 +261,14 @@ public class ScrollHandler {
 	        	frontGrass.reset(backGrass.getTailX());
 	        }
 	        else if (backGrass.isScrolledLeft()) backGrass.reset(frontGrass.getTailX());
+	        
+	        if(frontDirt.isScrolledLeft()) {
+	        	frontDirt.reset(backDirt.getTailX());
+	        }
+	        else if (backDirt.isScrolledLeft()) {
+	        	backDirt.reset(frontDirt.getTailX());
+	        }
+	        
 	        
 	        if(shroom.isScrolledLeft()) {
 	        	SHROOM = true;
@@ -276,10 +326,17 @@ public class ScrollHandler {
  	        }
  	        
  	        if (frontGrass.isScrolledRight()) {
- 	        	frontGrass.reset(backGrass.getX() - 143);
+ 	        	frontGrass.reset(backGrass.getX() - 136);
  	        }
  	        else if (backGrass.isScrolledRight()) {
- 	        	backGrass.reset(frontGrass.getX() - 143);
+ 	        	backGrass.reset(frontGrass.getX() - 136);
+ 	        }
+ 	        
+ 	       if(frontDirt.isScrolledRight()) {
+ 	        	frontDirt.reset(backDirt.getX() - 136);
+ 	        }
+ 	        else if (backDirt.isScrolledRight()) {
+ 	        	backDirt.reset(frontDirt.getX() - 136);
  	        }
  	        
  	       if(shroom.isScrolledRight()) {
@@ -346,12 +403,29 @@ public class ScrollHandler {
 	}
 	
     // The getters for our five instance variables
+	
+	public Background getFrontBG() {
+		return frontBG;
+	}
+	
+	public Background getBackBG() {
+		return backBG;
+	}
+	
     public Grass getFrontGrass() {
         return frontGrass;
     }
 
     public Grass getBackGrass() {
         return backGrass;
+    }
+    
+    public Dirt getFrontDirt() {
+    	return frontDirt;
+    }
+    
+    public Dirt getBackDirt() {
+    	return backDirt;
     }
 
     public Wall getWall1() {
@@ -408,6 +482,10 @@ public class ScrollHandler {
     	fruit2.stop();
     	fruit3.stop();
     	shroom.stop();
+    	frontBG.stop();
+    	backBG.stop();
+    	frontDirt.stop();
+    	backDirt.stop();
     }
  
     
@@ -437,6 +515,10 @@ public class ScrollHandler {
     	SCROLL_SPEED = -49;
     	frontGrass.restart(0, SCROLL_SPEED);
     	backGrass.restart(frontGrass.getTailX(), SCROLL_SPEED);
+    	frontDirt.restart(0, SCROLL_SPEED);
+    	backDirt.restart(frontDirt.getTailX(), SCROLL_SPEED);
+    	frontBG.restart(0, BG_SPEED);
+    	backBG.restart(frontBG.getTailX(), BG_SPEED);
     	wall1.restart(210, SCROLL_SPEED);
     	wall2.restart(wall1.getTailX() + WALL_GAP, SCROLL_SPEED);
     	wall3.restart(wall2.getTailX() + WALL_GAP, SCROLL_SPEED);
@@ -480,6 +562,8 @@ public class ScrollHandler {
     	backGrass.reverse(high);
     	frontGrass.reverse(high);
     	shroom.reverse(high);
+    	frontDirt.reverse(high);
+    	backDirt.reverse(high);
     }
 
 }
