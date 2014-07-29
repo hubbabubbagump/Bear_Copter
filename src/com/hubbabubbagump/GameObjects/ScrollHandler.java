@@ -20,6 +20,7 @@ public class ScrollHandler {
     private boolean callCombo1 = true;//ensures it only calls the function once instead of
     private boolean callCombo2 = true;//all of the time it spends behind the bear
     private boolean callCombo3 = true;
+    private boolean callCombo4 = true;
     
     public static final int WALLS = 3; //number of walls
    // private Wall[] wall = new Wall[WALLS];
@@ -31,7 +32,8 @@ public class ScrollHandler {
     
     private int shroomProbability;			//creates a random number from 0 to
     private static final int SHROOMMAX = 30;//SHROOMMAX to determine whether or not to spawn a shroom
-    private static final int SHROOMNUMBER = 1; //if the randomized number is > 28, spawns a shroom
+    private static int SHROOMNUMBER = 28; //if the randomized number is > 28, spawns a shroom
+    private static int SHROOMNUMBERSAVE = SHROOMNUMBER;
     
     private static boolean SHROOM = false; // is true if a shroom exists in front of the bear
     									   // only allows one shroom on the screen at a time
@@ -191,6 +193,10 @@ public class ScrollHandler {
 			BearCopter.comboReset();
 			callCombo3 = false;
 
+        }
+        if(shroom.combo() && callCombo4) {
+        	BearCopter.comboReset();
+        	callCombo4 = false;
         }
         
         
@@ -366,6 +372,8 @@ public class ScrollHandler {
 		}
 		SHROOM = false;
 		shroom.restart(wallX + 4, shroomHeight, SCROLL_SPEED);
+		
+		callCombo4 = true;
 	}
 	
 	public void wallCheck() {
@@ -538,19 +546,25 @@ public class ScrollHandler {
 		callCombo1 = true;
 		callCombo2 = true;
 		callCombo3 = true;
+		callCombo4 = true;
 		
 		USESCROLLEDLEFT = true;
 		
+		SHROOMNUMBER = SHROOMNUMBERSAVE;
+		
     }
+    
     
     public void reverse(boolean high) {
     	if(USESCROLLEDLEFT) {
     		USESCROLLEDLEFT = false;
     		SCROLL_SPEED = 49;
+    		shroomChange();
     	}
     	else if (!USESCROLLEDLEFT) {
     		USESCROLLEDLEFT = true;
     		SCROLL_SPEED = -49;
+    		shroomRestore();
     	}
     	
     	wall1.reverse(high);
@@ -564,6 +578,14 @@ public class ScrollHandler {
     	shroom.reverse(high);
     	frontDirt.reverse(high);
     	backDirt.reverse(high);
+    }
+    
+    public void shroomChange() {
+    	SHROOMNUMBER = 100;
+    }
+    
+    public void shroomRestore() {
+    	SHROOMNUMBER = SHROOMNUMBERSAVE;
     }
 
 }

@@ -78,6 +78,8 @@ public class GameRenderer {
 	private TextureRegion dirt;
 	
 	private Animation rainbowAnimation;
+	private Animation bearBlink;
+	private Animation downBlink;
 	
 	@SuppressWarnings("unused")
 	private List<StartButton> menuButtons;
@@ -184,6 +186,8 @@ public class GameRenderer {
 		redShroom = AssetLoader.redShroom;
 		greenShroom = AssetLoader.greenShroom;
 		rainbowAnimation = AssetLoader.rainbowAnimation;
+		bearBlink = AssetLoader.bearBlink;
+		downBlink = AssetLoader.downBlink;
 		dirt = AssetLoader.dirt;
 		wallBottom = AssetLoader.wallBottom;
 		wallTop = AssetLoader.wallTop;
@@ -316,16 +320,31 @@ public class GameRenderer {
 		                    1, 1, bear.getRotation());
 				}
 				else if (bear.notScared()) { 
-		            batcher.draw(bearDown, bear.getX(), bear.getY(),
-		                    bear.getWidth() / 2.0f, bear.getHeight() / 2.0f,
-		                    bear.getWidth(), bear.getHeight(), 1, 1, bear.getRotation());
+					if(GameWorld.isInvincible()) {
+						batcher.draw(downBlink.getKeyFrame(runTime), bear.getX(), bear.getY(),
+								bear.getWidth() / 2.0f, bear.getHeight() / 2.0f,
+			                    bear.getWidth(), bear.getHeight(), 1, 1, bear.getRotation());
+					}
+					else {
+						batcher.draw(bearDown, bear.getX(), bear.getY(),
+								bear.getWidth() / 2.0f, bear.getHeight() / 2.0f,
+			                    bear.getWidth(), bear.getHeight(), 1, 1, bear.getRotation());
+					}
+		                    
 
 		        } 
 				else {
-		            batcher.draw(bearMid, bear.getX(),
+					if(GameWorld.isInvincible()) {
+						batcher.draw(bearBlink.getKeyFrame(runTime), bear.getX(), bear.getY(),
+								bear.getWidth() / 2.0f, bear.getHeight() / 2.0f,
+			                    bear.getWidth(), bear.getHeight(), 1, 1, bear.getRotation());
+					}
+					else {
+						batcher.draw(bearMid, bear.getX(),
 		                    bear.getY(), bear.getWidth() / 2.0f,
 		                    bear.getHeight() / 2.0f, bear.getWidth(), bear.getHeight(),
 		                    1, 1, bear.getRotation());
+					}
 		        }
 	}
 	
@@ -414,8 +433,15 @@ public class GameRenderer {
 		shapeRenderer.begin(ShapeType.Filled);
 		
 		//Draws background color
-		shapeRenderer.setColor(7/255.0f, 140/255.0f, 253/255.0f, 1);
-		shapeRenderer.rect(0, 0, 136, midPointY + 66);
+		if (GameWorld.background() >= 1) {
+			shapeRenderer.setColor(182/255.0f, 56/255.0f, 126/255.0f, 1);
+			shapeRenderer.rect(0, 0, 136, midPointY + 66);
+		}
+		else {
+			shapeRenderer.setColor(121/255.0f, 202/255.0f, 249/255.0f, 1);
+			shapeRenderer.rect(0, 0, 136, midPointY + 66);
+		}
+		
 		
 		//Draws grass
 		shapeRenderer.setColor(39/255.0f, 59/255.0f, 10/255.0f, 1);

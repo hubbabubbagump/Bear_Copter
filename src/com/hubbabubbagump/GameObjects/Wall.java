@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.hubbabubbagump.GameWorld.GameWorld;
 import com.hubbabubbagump.Screens.GameScreen;
 
@@ -21,6 +22,10 @@ public class Wall extends Scrollable{
 		private static int score;
 		private static float widthToCheck;
 		private static float xLoc;
+		
+		private boolean destroy = false;
+		private Vector2 acceleration;
+		private static final int ACCELERATION_Y = 460;
 				
 		//resets the wall
 		public Wall(float x, float y, int width, int height, float scrollSpeed) {
@@ -31,20 +36,37 @@ public class Wall extends Scrollable{
 			
 			widthToCheck = width;
 			
+			acceleration = new Vector2(0, ACCELERATION_Y);
+			
 		}
 		
 		@Override
 		public void update(float delta) {
+			if(GameWorld.isInvincible() && (position.x <= 120) && getY() <= LENGTH) {
+				destroyWall();
+				velocity.add(acceleration.cpy().scl(delta));
+			}
+			
 			super.update(delta);
 			//position.x and position.x are the coordinates for the top left of the wall
 			bar.set(position.x, position.y + yLoc, width, height);
-
+			
+		}
+		
+		public void destroyWall() {
+			destroy = true;
+		}
+		
+		public boolean isDestroy() {
+			return destroy;
 		}
 		
 		public boolean collides(BearCopter bear) {
-			//checks if the wall and circle around the bear overlap
-			return (Intersector.overlaps(bear.getBoundingCircle(), bar));
-			
+			if (!destroy) {
+				//checks if the wall and circle around the bear overlap
+				return (Intersector.overlaps(bear.getBoundingCircle(), bar));
+			}
+			else return false;
 		}
 		
 		public void randomize() {
@@ -78,6 +100,9 @@ public class Wall extends Scrollable{
 			position.y = 0;
 			randomize();
 			xLoc = newX;
+			destroy = false;
+			velocity.y = 0;
+			
 		}
 		
 		public Rectangle getBar() {

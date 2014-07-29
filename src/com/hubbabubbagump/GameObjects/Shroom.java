@@ -105,5 +105,11 @@ public class Shroom extends Scrollable{
 		 }
 	 }
 
-
+	 public boolean combo() {
+			//if the fruit is behind bear and isn't eaten, returns true
+			if(position.x <= 25  && !eaten) {
+				return true;
+			}
+			return false;
+	}
 }

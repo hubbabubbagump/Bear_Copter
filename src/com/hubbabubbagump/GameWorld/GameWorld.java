@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.hubbabubbagump.GameObjects.BearCopter;
 import com.hubbabubbagump.GameObjects.ScrollHandler;
+import com.hubbabubbagump.GameObjects.Shroom;
 import com.hubbabubbagump.Helpers.AssetLoader;
 import com.hubbabubbagump.Screens.GameScreen;
 
@@ -18,6 +19,8 @@ public class GameWorld {
 	private static Random rand;
 	
 	public static int bg;
+	
+	private Shroom shroom;
 	
 	private BearCopter bear;
 	private ScrollHandler scroller;
@@ -30,6 +33,7 @@ public class GameWorld {
 	private static final float TIMERATE = 1;
 
 	public static boolean high = false;
+	public static boolean invincible = false;
 	
 	private static GameState currentState;
 	
@@ -75,11 +79,17 @@ public class GameWorld {
 		
 		fps = new FPSLogger();
 		rand = new Random();
-		bg = rand.nextInt(2);
+		bg = 0;
+		
+		shroom = scroller.getShroom();
 	}
 	
 	public static int getScore() {
 		return score;
+	}
+	
+	public static boolean isInvincible() {
+		return invincible;
 	}
 	
 	public static float getMid() {
@@ -147,25 +157,39 @@ public class GameWorld {
 		scroller.update(delta);
 		
 		//collision checks
-		wallCheck();
+		if (!invincible) {
+			wallCheck();
+		}
 		groundCeilingCheck();
 		fruitCheck();
 		
 		high();
 		
 		//if the bear is "high"
-		if(high) {
+		if(high || invincible) {
 			counter(delta);
 		}
+		
 		if(time.x >= DELAY) { //once 10 seconds is up
-			high = false;  //reverts everything back
+			
 			time.x = 0;
-			bear.reverse(high);
-			scroller.reverse(high);
 			runOnce = true;
-			AssetLoader.trippy.pause();
-			AssetLoader.BGM.play();
-			BGMpaused = false;
+			
+			if (shroom.shroomNumber() == 0) {
+				invincible = false;
+				
+				scroller.shroomRestore();
+			}
+			else {
+				high = false;  //reverts everything back
+			
+				bear.reverse(high);
+				scroller.reverse(high);
+				
+				AssetLoader.trippy.pause();
+				AssetLoader.BGM.play();
+				BGMpaused = false;
+			}
 		}
 
 	}
@@ -195,8 +219,16 @@ public class GameWorld {
 				scroller.ateShroom();
 				bear.shroomEaten();
 				BearCopter.comboUp();
-				high = true;
 				time.x = 0;
+				//red shroom triggers no walls
+				if (shroom.shroomNumber() == 0) {
+					invincible = true;
+					scroller.shroomChange();
+				}
+				//green shroom triggers a high
+				else {
+					high = true;
+				}
 			}
 		}
 	}
@@ -309,6 +341,8 @@ public class GameWorld {
 	}
 	
 	public void restart() {
+		invincible = false;
+		
 		mid = GameScreen.midScreen();
 		currentState = GameState.PAUSE_STATE;
 		bear.restart(RESTART_HEIGHT);

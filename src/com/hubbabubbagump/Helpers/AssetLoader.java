@@ -61,8 +61,10 @@ public class AssetLoader {
 	public static TextureRegion menuDown;
 	
 	public static Animation rainbowAnimation;
+	public static Animation bearBlink;
+	public static Animation downBlink;
 	
-	public static TextureRegion bear, bearDown;
+	public static TextureRegion bear, bearDown, bearBlank;
 	
 	public static TextureRegion brick;
 	
@@ -227,6 +229,9 @@ public class AssetLoader {
 		bear = new TextureRegion(texture, 136, 0, 18, 16);
 		bear.flip(false, true);
 		
+		bearBlank = new TextureRegion(texture, 220, 0, 18, 16);
+		bearBlank.flip(false, true);
+		
 		brick = new TextureRegion(wallMid, 0, 0, 22, 5);
 		brick.flip(false, true);
 		
@@ -244,6 +249,14 @@ public class AssetLoader {
 		TextureRegion[] rainbows = {rainbow1, rainbow2, rainbow3};
 		rainbowAnimation = new Animation(0.06f, rainbows);
 		rainbowAnimation.setPlayMode(Animation.PlayMode.LOOP);
+		
+		TextureRegion[] bears = {bear, bearBlank};
+		bearBlink = new Animation(0.06f, bears);
+		bearBlink.setPlayMode(Animation.PlayMode.LOOP);
+		
+		TextureRegion[] bearDowns = {bearDown, bearBlank};
+		downBlink = new Animation(0.06f, bearDowns);
+		downBlink.setPlayMode(Animation.PlayMode.LOOP);
 		
 		prefs = Gdx.app.getPreferences("BearCopter");
 		

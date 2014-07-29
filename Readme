@@ -2,7 +2,7 @@
 BEARCOPTER
 ======================================
 
-Version 0.6
+Version 0.65
 Release Date: TBA
 
 ======================================
@@ -18,14 +18,23 @@ Latest update
 Release date:
 July 26 2014
 
-Version 0.6
+Version 0.65
 -fixed a bug in wall randomization
 -fixed hitboxes
 -added a button to return to the
  menu on the game over screen
- -raised location of ceiling
-  (removing it altogether breaks
-  the game)
+-raised location of ceiling
+ (removing it altogether breaks
+ the game)
+-separated effects upon eating a
+ green shroom and red shroom
+-green shroom still produces the high
+ effect
+-red shroom now makes the bear blink
+ and has the walls drop while 
+ disabling wall collisions; ground
+ and ceiling collisions are still 
+ in effect however
 -revamped graphics:
 	-changed light background
 	-added dark background
