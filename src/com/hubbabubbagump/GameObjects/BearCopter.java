@@ -21,15 +21,15 @@ public class BearCopter {
 	private float rotation;
 	private int width;
 	private int height;
-	public static final float VOLUME = GameWorld.VOLUME;
+	public static float VOLUME = GameWorld.VOLUME;
 
 	public static int COMBO = 0; // combo counter
 	private static final int GOOD = 2; // combo multipliers
 	private static final int GREAT = 3;
 	private static final int EXCELLENT = 4;
-	public static final int GOOD_THRESHOLD = 2;
-	public static final int GREAT_THRESHOLD = 5;
-	public static final int EXCELLENT_THRESHOLD = 10;
+	public static final int GOOD_THRESHOLD = 5;
+	public static final int GREAT_THRESHOLD = 10;
+	public static final int EXCELLENT_THRESHOLD = 15;
 
 	private static float mid = GameScreen.midScreen();
 
@@ -38,6 +38,8 @@ public class BearCopter {
 
 	// rate at which the score is accumulated
 	public static final int SCORE_RATE = 1;
+	
+	public static final int STARTING_SCORE = 0;
 
 	// Velocity limit
 	public static final int VELOCITY_CAP = 200;
@@ -54,13 +56,13 @@ public class BearCopter {
 	public static int CW_ROTATION_RATE = 480;
 
 	// radius of the circle
-	public static float CIRCLE_RADIUS = 8.3f;
+	public static float CIRCLE_RADIUS = 8.5f;
 
 	public static float CIRCLE_X = 0;
 	public static float CIRCLE_Y = 0;
 
-	public static int SCORE_INCREASE = 3;
-	public static final int SHROOM_INCREASE = 8;
+	public static final int SCORE_INCREASE = 3;
+	public static final int SHROOM_INCREASE = 5;
 
 	public static float BEAR_WIDTH = 9;
 	public static float BEAR_HEIGHT = 8;
@@ -69,6 +71,8 @@ public class BearCopter {
 	public static final float Y_COS = mid - 5;
 
 	private static boolean isHigh = false;
+	
+	public static boolean explode = false;
 
 	public BearCopter(float x, float y, int width, int height) {
 		this.width = width;
@@ -83,7 +87,7 @@ public class BearCopter {
 														// acceleration
 		boundCircle = new Circle();
 
-		score = new Vector2(0, 0);
+		score = new Vector2(STARTING_SCORE, 0);
 		scoreRate = new Vector2(SCORE_RATE, 0);
 
 		Alive = true;
@@ -98,10 +102,9 @@ public class BearCopter {
 	}
 
 	public void update(float delta) {
+		VOLUME = GameWorld.VOLUME;
 		isHigh = GameWorld.isHigh();
 		// sets the center of the circle onto the middle of the bear
-		CIRCLE_X = position.x + BEAR_HEIGHT;
-		CIRCLE_Y = position.y + BEAR_WIDTH;
 
 		velocity.add(acceleration.cpy().scl(delta)); // adds a scalar of
 														// acceleration to
@@ -111,6 +114,8 @@ public class BearCopter {
 		}
 		position.add(velocity.cpy().scl(delta)); // adds a scalar of the
 													// velocity to the position
+		CIRCLE_X = position.x + BEAR_HEIGHT;
+		CIRCLE_Y = position.y + BEAR_WIDTH;
 
 		// sets circle center to (9, 8) with respect to the bear
 		// sets radius to 6.5f
@@ -152,8 +157,8 @@ public class BearCopter {
 			score.x = score.x + SCORE_INCREASE;
 		}
 
-		long eat = AssetLoader.eat.play();
-		AssetLoader.eat.setVolume(eat, VOLUME);
+		AssetLoader.eat.play(VOLUME);
+		
 
 	}
 
@@ -168,8 +173,7 @@ public class BearCopter {
 		} else {
 			score.x = score.x + SHROOM_INCREASE;
 		}
-		long eat = AssetLoader.eat.play();
-		AssetLoader.eat.setVolume(eat, VOLUME);
+		AssetLoader.eat.play(VOLUME);
 
 	}
 
@@ -193,9 +197,8 @@ public class BearCopter {
 		if (Alive && GameWorld.running()) {
 			velocity.y = VELOCITY_CLICK; // sets the velocity of the bear to
 											// -140 when screen is clicked.
-			
-			long up = AssetLoader.up.play();
-			AssetLoader.up.setVolume(up, VOLUME);
+			 VOLUME = GameWorld.VOLUME;
+			AssetLoader.up.play(VOLUME);
 		}
 	}
 
@@ -249,6 +252,7 @@ public class BearCopter {
 	}
 
 	public void restart(int yPos) {
+		explode = false;
 		isHigh = GameWorld.isHigh();
 		rotation = 0;
 		position.y = yPos; // sets the bear back to the starting position
@@ -258,14 +262,32 @@ public class BearCopter {
 		position.x = 33;
 
 		scoreRate.x = SCORE_RATE;
-		score.x = 0; // resets the score
+		score.x = STARTING_SCORE; // resets the score
 
 		COMBO = 0;
 		BEAR_WIDTH = 9;
 		BEAR_HEIGHT = 8;
 		if (isHigh) {
-			AssetLoader.bear.flip(true, false);
-			AssetLoader.bearDown.flip(true, false);
+			if (AssetLoader.getCurrentAvatar() == 0) {
+				AssetLoader.bear.flip(true, false);
+				AssetLoader.bearDown.flip(true, false);
+			}
+			else if (AssetLoader.getCurrentAvatar() == 1) {
+				AssetLoader.penguin.flip(true, false);
+				AssetLoader.penguindown.flip(true, false);
+			}
+			else if (AssetLoader.getCurrentAvatar() == 2) {
+				AssetLoader.ram.flip(true, false);
+				AssetLoader.ramdown.flip(true, false);
+			}
+			else if (AssetLoader.getCurrentAvatar() == 3) {
+				AssetLoader.toast.flip(true, false);
+				AssetLoader.toast.flip(true, false);
+			}
+			else if (AssetLoader.getCurrentAvatar() == 4) {
+				AssetLoader.cat.flip(true, false);
+				AssetLoader.catdown.flip(true, false);
+			}
 		}
 		isHigh = false;
 
@@ -284,9 +306,56 @@ public class BearCopter {
 			CW_ROTATION_RATE = 480;
 			rotation = 0;
 		}
-		AssetLoader.bear.flip(true, false);
-		AssetLoader.bearDown.flip(true, false);
+		if (AssetLoader.getCurrentAvatar() == 0) {
+			AssetLoader.bear.flip(true, false);
+			AssetLoader.bearDown.flip(true, false);
+		}
+		else if (AssetLoader.getCurrentAvatar() == 1) {
+			AssetLoader.penguin.flip(true, false);
+			AssetLoader.penguindown.flip(true, false);
+		}
+		else if (AssetLoader.getCurrentAvatar() == 2) {
+			AssetLoader.ram.flip(true, false);
+			AssetLoader.ramdown.flip(true, false);
+		}
+		else if (AssetLoader.getCurrentAvatar() == 3) {
+			AssetLoader.toast.flip(true, false);
+			AssetLoader.toast.flip(true, false);
+		}
+		else if (AssetLoader.getCurrentAvatar() == 4) {
+			AssetLoader.cat.flip(true, false);
+			AssetLoader.catdown.flip(true, false);
+		}
 
 	}
+	
+	public float barrelX() {
+		 return getX() + 17;
+	}
+	
+	public float barrelY() {
+		 return getY() + 11;
+	}
+	
+	public void ForTestingPurposes() {
+		velocity.y = 100;
+		acceleration.y = 100;
+	}
+	
+	public float vy() {
+		return velocity.y;
+	}
+	
+	public float ay() {
+		return acceleration.y;
+	}
 
+	public void explode() {
+		explode = true;
+		
+	}
+
+	public boolean isExplode() {
+		return explode;
+	}
 }

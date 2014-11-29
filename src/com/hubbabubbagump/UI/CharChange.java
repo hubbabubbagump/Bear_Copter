@@ -3,14 +3,12 @@ package com.hubbabubbagump.UI;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.hubbabubbagump.Helpers.AssetLoader;
 
-public class MenuButton {
+public class CharChange {
 	
 	private float x, y, width, height;
 	
-	private TextureRegion menuButton;
-	private TextureRegion menuDown;
+	private TextureRegion avatar;
 	
 	private Rectangle bounds;
 	
@@ -20,17 +18,17 @@ public class MenuButton {
 	private boolean press = false;
 	
 	//coordinates for where the menu button is
-	public static final int BUTTON_X_LOCATION = 18;
-	public static final int BUTTON_Y_LOCATION = AssetLoader.start.getRegionHeight() / 2;
+	public static int BUTTON_X_LOCATION;
+	public static int BUTTON_Y_LOCATION;
 	
-	public MenuButton(float x, float y, float width, float height, TextureRegion menuButton, TextureRegion menuDown) {
+	public CharChange(float x, float y, float width, float height, TextureRegion avatar) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.menuButton = menuButton;
-		this.menuDown = menuDown;
-		
+		this.avatar = avatar;
+		BUTTON_X_LOCATION = (int) x;
+		BUTTON_Y_LOCATION = (int) y;
 		
 		bounds = new Rectangle(x, y, width, height);
 	}
@@ -40,13 +38,8 @@ public class MenuButton {
 	}
 	
 	public void draw(SpriteBatch batcher) {
+		batcher.draw(avatar, x, y, width, height);
 		
-		batcher.draw(menuButton, x, y, width, height);
-		
-	}
-	
-	public void drawDown(SpriteBatch batcher) {
-		batcher.draw(menuDown, x, y, width, height);
 	}
 	
 	public boolean downTouch(int screenX, int screenY) {
@@ -56,6 +49,10 @@ public class MenuButton {
 			
 		}
 		return false;
+	}
+	
+	public boolean isPressed() {
+		return press;
 	}
 	
 	public boolean upTouch(int screenX, int screenY) {

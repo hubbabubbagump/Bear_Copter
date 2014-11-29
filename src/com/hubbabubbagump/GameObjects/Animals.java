@@ -1,35 +1,29 @@
 package com.hubbabubbagump.GameObjects;
 
-import java.util.Random;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.hubbabubbagump.Screens.GameScreen;
 
-public class Shroom extends Scrollable{
+public class Animals extends Scrollable{
 	
 	private Circle circle;
-	private Random rand;
 	
 	public static final int SHROOMAMOUNT = 2; //how many fruit images there are (apple, etc)
-	private int shroom_number;
 	
 	public boolean eaten = false;
 	
-	public static final float RADIUS = (float) 4.5;
+	public static final float RADIUS = (float) 6.5;
 	
 	public static final int MINIMUM_HEIGHT = 20;
 	public static final int MAXIMUM_HEIGHT = (int) (GameScreen.midScreen() + 26);
 
 	
-	public Shroom(float x, float y, int width, int height, float scrollSpeed) {
+	public Animals(float x, float y, int width, int height, float scrollSpeed) {
 		super(x, y, width, height, scrollSpeed);
 
-		rand = new Random();
 		circle = new Circle();
 		
-		//Creates a random number to decide which shroom is rendered
-		shroom_number = rand.nextInt(SHROOMAMOUNT);
 	}
 	
 	@Override
@@ -45,16 +39,11 @@ public class Shroom extends Scrollable{
 	public void reset(float newX) {
 		super.reset(newX);
 		eaten = false; //sets eaten back to false
-		randomize();
 		
 	}
 	
 	public Circle getCircle() {
 		return circle;
-	}
-	
-	public int shroomNumber() {
-		return shroom_number;
 	}
 	
 	public boolean collides(BearCopter bear) {
@@ -65,8 +54,8 @@ public class Shroom extends Scrollable{
 		return false;
 	}
 	
-	public void randomize() {
-		shroom_number = rand.nextInt(SHROOMAMOUNT);
+	public boolean shroomCollide(Shroom shroom) {
+		return (Intersector.overlaps(shroom.getCircle(), circle));
 	}
 	
 	public void restart(float x, float y, float scrollSpeed) {
@@ -111,9 +100,5 @@ public class Shroom extends Scrollable{
 				return true;
 			}
 			return false;
-	}
-	 
-	public void moveUp() {
-		position.y = -50;
 	}
 }

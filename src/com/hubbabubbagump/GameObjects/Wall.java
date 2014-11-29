@@ -26,6 +26,13 @@ public class Wall extends Scrollable{
 		private boolean destroy = false;
 		private Vector2 acceleration;
 		private static final int ACCELERATION_Y = 460;
+		
+		private Vector2 time;
+		private Vector2 timeRate;
+		private static final int TIMERATE = 1;
+		private boolean addTime = false;
+		
+		public int wallLevel = 1;
 				
 		//resets the wall
 		public Wall(float x, float y, int width, int height, float scrollSpeed) {
@@ -38,19 +45,26 @@ public class Wall extends Scrollable{
 			
 			acceleration = new Vector2(0, ACCELERATION_Y);
 			
+			time = new Vector2(0, 0);
+			timeRate = new Vector2(TIMERATE, 0);
+			
 		}
 		
 		@Override
 		public void update(float delta) {
-			if(GameWorld.isInvincible() && (position.x <= 120) && getY() <= LENGTH) {
+			super.update(delta);
+			if(GameWorld.isInvincible() && (position.x <= 120)) {
 				destroyWall();
+				addTime = true;
+			}
+			if (addTime) {
+				time.add(timeRate.cpy().scl(delta));
+			}
+			if (time.x >= 0.35 && destroy) {
 				velocity.add(acceleration.cpy().scl(delta));
 			}
-			
-			super.update(delta);
 			//position.x and position.x are the coordinates for the top left of the wall
 			bar.set(position.x, position.y + yLoc, width, height);
-			
 		}
 		
 		public void destroyWall() {
@@ -69,29 +83,34 @@ public class Wall extends Scrollable{
 			else return false;
 		}
 		
+		//tested
 		public void randomize() {
 			score = GameWorld.getScore();
 			HEIGHT_LIMIT = (int) (LENGTH / 5);
 			//creates a random number to determine length of wall based on score
-			if (score >= 100) {
-				HEIGHT_LIMIT = (int) (LENGTH / 5) + 30;
-				height = rand.nextInt(HEIGHT_LIMIT) + HEIGHT_LIMIT - 20;
+			if (score >= 200) { //63 - 103
+				HEIGHT_LIMIT  = (int) ((int) (LENGTH / 5) + (LENGTH / 5.5));
+				height = rand.nextInt(HEIGHT_LIMIT - 19) + HEIGHT_LIMIT;
+			}
+			else if (score >= 125) { //assuming LENGTH = 165, LENGHT / 5 = 33
+				HEIGHT_LIMIT = (int) ((int) (LENGTH / 5) + (LENGTH / 5.5));
+				height = rand.nextInt(HEIGHT_LIMIT - 29) + (HEIGHT_LIMIT - 7); //56 - 93
 				
 			}
 			else if (score >= 50) {
-				HEIGHT_LIMIT =  (int) (LENGTH / 5) + 15;
-				height = rand.nextInt(HEIGHT_LIMIT) + HEIGHT_LIMIT - 15;
+				HEIGHT_LIMIT =  (int) ((int) (LENGTH / 5) + (LENGTH / 8));
+				height = rand.nextInt(HEIGHT_LIMIT - 21) + (HEIGHT_LIMIT - 11); //42 - 74
 				
 			}
 			else {
-				height = rand.nextInt(HEIGHT_LIMIT) + HEIGHT_LIMIT - 10;
+				height = rand.nextInt(HEIGHT_LIMIT - 5) + (HEIGHT_LIMIT - 5); // 28 - 56
 			}
 			
 			//creates a random number to determine how far down the wall is
 			int MAX_LENGTH = (int) (LENGTH - height);
 			yLoc = rand.nextInt(MAX_LENGTH);
 			
-			 
+			
 		}
 		
 		@Override
@@ -102,6 +121,8 @@ public class Wall extends Scrollable{
 			xLoc = newX;
 			destroy = false;
 			velocity.y = 0;
+			time.x = 0;
+			addTime = false;
 			
 		}
 		
@@ -111,7 +132,12 @@ public class Wall extends Scrollable{
 		
 		public void restart(float x, float scrollSpeed) {
 			velocity.x = scrollSpeed;
+			wallLevel = 1;
 			reset(x);
+		}
+		
+		public void bars() {
+			wallLevel = 2;
 		}
 		
 		public float getY() {
@@ -139,7 +165,14 @@ public class Wall extends Scrollable{
 			else if (position.x > 68) {
 				position.x = 136 - position.x;
 			}
-		 
-
 		}
+		
+		public float getVelocity() {
+			return velocity.x;
+		}
+		
+		public void down() {
+			position.y++;
+		}
+		
 }
